@@ -73,6 +73,22 @@ helm install cluster-config startx/cluster-config
 helm install cluster-config startx/cluster-config -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-config startx/cluster-config -f <file>`) :
+
+- [values-cdf-poc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-cdf-poc.yaml) : against `values-startx.yaml`: differ on 27 keys, by top-level key: `monitoring` (11), `project` (8), `context` (3), `projectSosReport` (3), ...
+- [values-mg.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-mg.yaml) : against `values-startx.yaml`: differ on 14 keys, by top-level key: `monitoring` (11), `ingresscontroller` (1), `project` (1), `projectSosReport` (1)
+- [values-ppmc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-ppmc.yaml) : against `values-startx.yaml`: differ on 23 keys, by top-level key: `monitoring` (10), `project` (6), `projectSosReport` (3), `context` (2), ...
+- [values-prgmk.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-prgmk.yaml) : against `values-startx.yaml`: differ on 19 keys, by top-level key: `monitoring` (10), `project` (5), `projectSosReport` (2), `clusterversion` (1), ...
+- [values-startx-elastic.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx-elastic.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 110 keys, by top-level key: `project` (26), `operatorElastic` (24), `monitoring` (14), `projectSosReport` (14), ...
+- [values-startx-loki.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx-loki.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 110 keys, by top-level key: `project` (26), `operatorLoki` (24), `monitoring` (14), `projectSosReport` (14), ...
+- [values-startx-operator.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx-operator.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 115 keys, by top-level key: `project` (26), `operatorSosReport` (22), `operatorGlobal` (15), `monitoring` (14), ...
+- [values-startx_noinfra-elastic.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx_noinfra-elastic.yaml) : context `startx/default/infra`; against `values-startx-elastic.yaml`: differ on `operatorElastic.subscription.operator.config.infra` (true → false)
+- [values-startx_noinfra-loki.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx_noinfra-loki.yaml) : context `startx/default/infra`; against `values-startx-loki.yaml`: differ on `operatorLoki.subscription.operator.config.infra` (true → false)
+- [values-startx_noinfra-operator.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx_noinfra-operator.yaml) : context `startx/default/infra`; against `values-startx-operator.yaml`: differ on `operatorGlobal.operatorGroup.enabled` (false → true)
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx_noinfra.yaml) : context `startx/default/infra`; same values as `values-startx.yaml`
+
 ## Cluster monitoring
 
 The `monitoring` block manages the `cluster-monitoring-config` ConfigMap of the `openshift-monitoring`
@@ -155,8 +171,6 @@ oc apply -k .
 ```
 
 ### Applications
-
-
 
 ## External secrets
 

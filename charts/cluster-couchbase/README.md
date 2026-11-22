@@ -63,6 +63,16 @@ helm install cluster-couchbase-instance startx/cluster-couchbase --set project.e
 helm install cluster-couchbase startx/cluster-couchbase -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-couchbase/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-couchbase startx/cluster-couchbase -f <file>`) :
+
+- [values-demo-jupiter.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-couchbase/values-demo-jupiter.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 45 keys, by top-level key: `operator` (18), `project` (13), `couchbaseConfig` (6), `clusterRbac` (3), ...
+- [values-demo-mercury.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-couchbase/values-demo-mercury.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 45 keys, by top-level key: `operator` (18), `project` (13), `couchbaseConfig` (6), `clusterRbac` (3), ...
+- [values-demo-venus.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-couchbase/values-demo-venus.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 45 keys, by top-level key: `operator` (18), `project` (13), `couchbaseConfig` (6), `clusterRbac` (3), ...
+- [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-couchbase/values-demo.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 12 keys, by top-level key: `project` (4), `operator` (3), `context` (2), `loader` (2), ...
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-couchbase/values-startx_noinfra.yaml) : context `startx/default/infra`; same values as `values-startx.yaml`
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -74,8 +84,6 @@ oc apply -k .
 ```
 
 ### Applications
-
-
 
 ## History
 

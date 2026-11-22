@@ -59,6 +59,14 @@ helm install cluster-odf startx/cluster-odf
 helm install cluster-odf startx/cluster-odf -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-odf/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-odf startx/cluster-odf -f <file>`) :
+
+- [values-cdf-poc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-odf/values-cdf-poc.yaml) : against `values-startx.yaml`: differ on 8 keys, by top-level key: `operator` (3), `odf` (2), `project` (2), `context` (1)
+- [values-mg.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-odf/values-mg.yaml) : against `values-startx.yaml`: differ on 8 keys, by top-level key: `operator` (3), `odf` (2), `project` (2), `context` (1)
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-odf/values-startx_noinfra.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on `odf.nodeLabeler.enabled`, `odf.storage`, `operator.subscription.operator.config.infra` (true → false)
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -72,8 +80,6 @@ oc apply -k .
 ### Applications
 
 > **Deletion order**: always delete in reverse creation order - `cluster-odf-app` first (wait for StorageCluster cleanup), then `cluster-odf-operator`, then `cluster-odf-project`. The sync-waves below enforce this order automatically in an App-of-Apps pattern.
-
-
 
 ## History
 

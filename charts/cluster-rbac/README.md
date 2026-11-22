@@ -56,6 +56,15 @@ helm install cluster-rbac startx/cluster-rbac
 helm install cluster-rbac startx/cluster-rbac -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rbac/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-rbac startx/cluster-rbac -f <file>`) :
+
+- [values-cdf-poc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rbac/values-cdf-poc.yaml) : against `values-startx.yaml`: differ on 4 keys, by top-level key: `context` (3), `roles` (1)
+- [values-prgmk.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rbac/values-prgmk.yaml) : against `values-startx.yaml`: differ on `context.app` (startx-rbac → pragmatik-rbac), `context.scope` (startx → pragmatik), `roles.list`
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rbac/values-startx_noinfra.yaml) : context `startx/default/infra`; same values as `values-startx.yaml`
+- [values-ubisoft.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rbac/values-ubisoft.yaml) : against `values-startx.yaml`: differ on `groups.list`, `roles.list`
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -67,8 +76,6 @@ oc apply -k .
 ```
 
 ### Applications
-
-
 
 ## History
 
