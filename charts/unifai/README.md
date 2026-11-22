@@ -291,7 +291,7 @@ stack:
 
 Since v0.1.76 the time a human has to answer a tool approval request is configurable with `MAS_HITL_TIMEOUT_SECONDS`
 (seconds, a number greater than 0, default `300`). An approval that is not answered when the delay expires is rejected.
-An empty or invalid value (not a number, `0` or negative) keeps the default and logs a warning ; an unset variable keeps the default silently. As for the
+An empty or invalid value (not a number, `0` or negative) keeps the default and logs a warning; an unset variable keeps the default silently. As for the
 delegation cap, set it under **both** `multiagent` and `multiagentWorker`, and restart the pods to apply a change. The
 chart does not set it : nothing changes unless you add it.
 
