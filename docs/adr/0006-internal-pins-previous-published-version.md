@@ -25,11 +25,18 @@ pass) the whole chain stopped, and a complete rebuild from a clean checkout was 
 - An *internal dependency* is a `dependencies[]` item whose `repository` is served by this repository bucket
   (`HELM_REPO_BASEURL` of `.tools/config`). Upstream charts (kargo, vault, qdrant, gitlab, chaos-mesh, litmus,
   kube-monkey) and other registries are not concerned.
-- The candidates are the versions of the **same MAJOR.MINOR** as the chart. At the first release of an OpenShift minor
-  (21.4.0 after 21.3.x) no published version exists in that minor: the release is **refused**, and the procedure is
-  to release the charts that have no internal dependency first (`make release CHART=project VERSION=21.4.0`, same for
-  `operator`, `sxapi`, `cluster-rbac`...), publish, then release the others (they pin 21.4.0). The pins are never taken
-  from the previous minor.
+- The candidates are the versions of the **same MAJOR.MINOR** as the chart. A pin is therefore never taken from the
+  previous minor, and a chart cannot be released at `X.Y.0` with a pin on another chart of the same minor: the first
+  releases of a minor are made in **rounds, one per level** of the dependency graph (below).
+- **Bootstrap of an OpenShift minor** (first release of 21.4 after 21.3.x). `.tools/bump-pins.py --levels` lists the
+  charts by depth in the internal dependency graph: level 0 = charts without internal dependency (`project`,
+  `operator`, `sxapi`, `cluster-rbac`, `cluster-auth`, `cluster-config`...), level N = charts with at least one
+  dependency of level N-1 (on 21.3.410: 17 charts at level 0, 71 at level 1, `chaos`, `cluster-3scale`,
+  `cluster-quay` and `example-catalog` at level 2). Release the levels in order, each round with the next patch
+  version: level 0 as `21.4.0`, publish, level 1 as `21.4.1` (its pins resolve to `21.4.0`), publish, level 2 as
+  `21.4.2` (pins on `21.4.0`/`21.4.1`), publish. The index of the repository must list a round before the next round
+  starts, otherwise the tool refuses (nothing published to pin). The literal commands are in `/new-major-release`.
+  Charts of different levels then carry different versions until the next full release (ADR-0001 already allows it).
 - The index is the one served by the dependency `repository` (`.../21/index.yaml`). When it cannot be downloaded the
   tool stops with exit code 2 and changes nothing: it never falls back to the versions of the local tree.
 - A dependency that has no published version below the target is an error: publish that chart first, in a release of
@@ -43,16 +50,17 @@ pass) the whole chain stopped, and a complete rebuild from a clean checkout was 
   | Guard | Where | What it proves |
   | ----- | ----- | -------------- |
   | `bump-pins.py --check-offline` | `ci-check.sh static`, CI | offline: every pin is an exact `X.Y.Z` strictly lower than its chart version. It cannot know whether that version is published |
-  | `bump-pins.py --below <next>` | `release-preflight.sh` | online: every pin resolves in the index below the version about to be released |
   | `bump-pins.py --check` | on demand | online: the pins in the tree are lower than the chart version **and** listed in the index |
-  | `release-verify.sh` (`pins`) | after a release | the pin in each published package is lower than the release and its `.tgz` is served |
+  | `release-preflight.sh` | before publication, stage-aware | tree already conform (after `release-charts` or after the pins commit): `bump-pins.py --check`, every pin is published. Tree not conform yet (before the release run): `bump-pins.py --below <next>`, every pin resolves in the index below the version about to be released |
+  | `release-verify.sh` (`pins`) | after a release | the pin in each published package is lower than the release and its `.tgz` is served. Releases before 21.3.412 (`PINS_RULE_FROM`) predate the rule: a pin equal to the release is accepted there |
 
 ## Consequences
 
 - A fix in `project` or `operator` reaches a dependent only when that dependent is released again. Procedure in two
   steps: (1) release and publish the dependency; (2) release the dependents that must take it (`make release CHART=<name>`,
   or `RELEASE_ALL=true make release-charts`): the release tool resolves their pins to the new version. `sx-helm
-  changed-charts` lists the dependents whose pin lags behind the index (`bump-pins.py --lagging`).
+  changed-charts` lists the dependents whose pin is below the highest published version the rule allows for their current
+  version (`bump-pins.py --lagging`); a version published at or above the version of the dependent is taken at its next release.
 - A dependent that needs a feature of a dependency (for instance `dockercfg.existingSecret` of `project` 21.3.398)
   must be released after that dependency is published, so its pin contains the feature.
 - Between two releases `Chart.yaml` files may carry a pin equal to the chart version only until the next release

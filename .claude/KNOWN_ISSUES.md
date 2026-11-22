@@ -60,8 +60,8 @@ Do not `git add -f` a lock; after changing a pin there is nothing else to commit
   with exit code 2: it never falls back to the local tree.
 - A fix in `project`/`operator` does not reach its dependents by itself: release the dependency, publish, then release the
   dependents (`sx-helm changed-charts` lists the dependents whose pin lags: `bump-pins.py --lagging`).
-- A new chart, or the first release of an OpenShift minor, has nothing published to pin: the tool refuses, release the
-  dependencies first (alone), then the dependents.
+- A new chart has nothing published to pin: the tool refuses, release the dependencies first (alone), then the dependents.
+  The first release of an OpenShift minor is made in rounds, one per level of `bump-pins.py --levels` (ADR-0006).
 
 ## chaos-litmus / chaos-mesh / chaos-monkey : wrappers around upstream charts
 
