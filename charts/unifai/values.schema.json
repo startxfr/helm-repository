@@ -141,7 +141,7 @@
             },
             "replicas": {
               "type": "object",
-              "description": "Pod count by component. Only multiagent (the multiagent-be Deployment, not its Temporal worker), from 1 to 10. Unset keeps the chart count and changes nothing ; setting it upgrades the multiagent-be release once, which normally restarts its pod once. dev runs exactly this count, prod raises the autoscaler minimum to it. More than one pod needs a ReadWriteMany shared storage (storage.sharedClassName). Also validated by the UnifaiStack CRD of operator 0.1.77 and later.",
+              "description": "Pod count by component. Only multiagent (the multiagent-be Deployment, not its Temporal worker), from 1 to 10. Unset keeps the chart count and changes nothing ; setting it upgrades the multiagent-be release once: the pod count changes and no running pod restarts. dev runs exactly this count, prod raises the autoscaler minimum to it. More than one pod needs a ReadWriteMany shared storage (storage.sharedClassName). Also validated by the UnifaiStack CRD of operator 0.1.77 and later.",
               "additionalProperties": false,
               "properties": {
                 "multiagent": {
