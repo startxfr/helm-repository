@@ -151,7 +151,15 @@ spec:
             os.environ.get("KUBERNETES_SERVICE_HOST", "kubernetes.default.svc"),
             os.environ.get("KUBERNETES_SERVICE_PORT", "443"))
         ignore = {name.strip() for name in os.environ.get("IGNORE", "").split(",") if name.strip()}
-        timeout, frequency = int(os.environ["TIMEOUT"]), max(1, int(os.environ["FREQUENCY"]))
+        def seconds(name, default):
+            # A value that is not a number must not stop the task before it writes its results
+            try:
+                return max(1, int(os.environ.get(name, "")))
+            except ValueError:
+                print("%s is not a number of seconds, using %s" % (name, default))
+                return default
+
+        timeout, frequency = seconds("TIMEOUT", 600), seconds("FREQUENCY", 15)
         context = ssl.create_default_context(cafile=sa + "/ca.crt")
 
         def unhealthy_operators():
@@ -376,7 +384,9 @@ spec:
             kubeconfig_path: /tmp/kubeconfig
             image_signature_verification_enabled: {{ ternary "True" "False" (default true $p.imageSignatureVerification) }}
             image_signature_public_key: cosign.pub
-            exit_on_failure: True
+            # Must stay False: krkn only reads this key with cerberus enabled, and then exits 1 after the
+            # first scenario even when the signal is healthy. An unhealthy signal fails the run in both cases
+            exit_on_failure: False
             auto_rollback: True
             rollback_versions_directory:
             publish_kraken_status: False

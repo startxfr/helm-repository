@@ -6,6 +6,9 @@
 {{- $hc := $k.healthChecks | default dict -}}
 {{- $osc := $k.objectStateChecks | default dict -}}
 {{- $mon := $k.monitoring | default dict -}}
+{{- if and $cerberus.enabled $cfg.exitOnFailure -}}
+{{- fail "kraken.config.exitOnFailure must stay false when kraken.cerberus.enabled is true: krkn would stop with an error after the first scenario, even on a healthy cerberus signal" -}}
+{{- end -}}
 {{- $kubeconfigPath := ternary "/tmp/kubeconfig" "/etc/kraken/kubeconfig/config" (eq $k.kubeconfig.mode "local") -}}
 {{- if eq ($k.engine | default "core") "core" }}
 ---

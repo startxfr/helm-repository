@@ -66,7 +66,7 @@ Nothing is deployed by default. With `project.enabled=true` and `pipeline.enable
 - 1 **project** named **chaos-pipeline**
 - 1 **serviceaccount** named **chaos-pipeline**, with a chaos **clusterrole** and its binding
 - 1 **configmap** named **chaos-pipeline-scenarios** with the enabled scenarios
-- 3 **tasks**: **cerberus-check**, **krkn-run** and **krkn-hub-scenario**
+- 4 **tasks**: **cerberus-check**, **clusteroperator-check**, **krkn-run** and **krkn-hub-scenario**
 - 2 **pipelines**: **chaos-infra** (3 platform pod scenarios enabled) and **chaos-application** (pod and container scenarios enabled)
 - no **pipelinerun**
 
@@ -211,6 +211,13 @@ placeholders: declare one scenario per target, and choose the ones to run with t
 A run is: `cerberus-gate` (waits for a healthy signal, fails after the timeout) → one task per scenario (each one fails
 the run when krkn, its health check or the cerberus signal fails) → `cerberus-final-check` and
 `clusteroperator-final-check`, always executed when they are enabled.
+With `cerberus-enabled`, krkn also reads the cerberus signal after each scenario: an unhealthy signal fails the
+scenario task, a healthy one lets the run continue.
+The PipelineRun examples set `timeouts.finally`: this time is taken from `timeouts.pipeline`, the gate and the
+scenarios share what is left.
+At start krkn looks for the cluster Prometheus and logs a `403` on the token of the `prometheus-k8s` service account
+when the pipeline service account cannot create it. The message is harmless while `pipeline.checkCriticalAlerts` is
+`false`: krkn goes on without metrics.
 A scenario that is not listed in the `scenarios` parameter is skipped, and the following ones still run. The parameter
 is empty by default: a PipelineRun that does not set it runs no scenario (only the gate and the final checks), so
 a run started by mistake injects nothing. Set `pipeline.infra.defaultScenarios` or
@@ -358,3 +365,4 @@ oc apply -k examples/argocd/
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
+| 21.3.400 | 2026-11-22 | fix: krkn-run no longer exits after a healthy cerberus signal (exit_on_failure), ClusterOperator check hardened, exitOnFailure refused with cerberus |
