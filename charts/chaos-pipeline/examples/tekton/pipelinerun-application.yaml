@@ -11,6 +11,8 @@ spec:
     serviceAccountName: chaos-pipeline
   timeouts:
     pipeline: 2h0m0s
+    # Time kept for the final checks (cerberus signal, ClusterOperators), inside the pipeline timeout
+    finally: 20m0s
   params:
     # Scenarios of this run (without this parameter no scenario runs)
     - name: scenarios

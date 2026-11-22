@@ -293,6 +293,7 @@ test_chaos-pipeline() {
         assert_sel "the application pipeline has the same empty default" 'select(.kind == "Pipeline" and .metadata.name == "chaos-application") | .spec.params[] | select(.name == "scenarios") | .default | length' 0
         assert_sel "the ClusterOperator check is the last finally task" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.finally[1].taskRef.name' clusteroperator-check
         assert_sel "the ClusterOperator check is off by default" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.params[] | select(.name == "clusteroperator-check") | .default' false
+        assert_sel "krkn does not exit after a healthy cerberus signal" 'select(.kind == "Task" and .metadata.name == "krkn-run") | .spec.steps[].script | test("image_signature_public_key: cosign.pub\\n[^\\n]*#[^\\n]*\\n[^\\n]*#[^\\n]*\\n *exit_on_failure: False")' true
         assert_sel "the application target is a pipeline parameter" 'select(.kind == "Pipeline" and .metadata.name == "chaos-application") | .spec.params[] | select(.name == "target-namespace") | .name' target-namespace
     }
     render postcheck --set pipeline.enabled=true --set pipeline.postCheck.clusterOperators.enabled=true \
