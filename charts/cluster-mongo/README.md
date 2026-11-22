@@ -36,16 +36,6 @@ helm show chart startx/cluster-mongo
 helm install cluster-mongo startx/cluster-mongo
 ```
 
-## Deploy with ArgoCD
-
-### Applications
-
-```bash
-git clone https://gitlab.com/startx1/helm.git
-cd helm-repository/charts/cluster-mongo/examples/argocd/
-oc apply -k .
-```
-
 ## Default values
 
 Complete deployment of a project with the following characteristics :
@@ -64,6 +54,16 @@ helm install cluster-mongo startx/cluster-mongo
 
 ```bash
 helm install cluster-mongo startx/cluster-mongo -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-mongo/values-startx.yaml
+```
+
+## Deploy with ArgoCD
+
+### Applications
+
+```bash
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-mongo/examples/argocd/
+oc apply -k .
 ```
 
 ## History

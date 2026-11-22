@@ -186,28 +186,6 @@ Example values files shipped with the chart, to use with `helm install -f <file>
 helm install cluster-cudn startx/cluster-cudn -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-cudn/values-startx.yaml
 ```
 
-## Deploy with ArgoCD
-
-### Deploy via ArgoCD Application
-
-Deploy `cluster-cudn` using two dedicated ArgoCD Applications - one per concern - sharing the same AppProject (there is no
-operator Application because the user-defined network APIs are built into OpenShift):
-
-- `cluster-cudn-project` (sync-wave `1`) creates the `default-cudn` project with the `project` sub-chart
-- `cluster-cudn-app` (sync-wave `10`) creates the tenant namespaces, the `ClusterUserDefinedNetwork` and the `UserDefinedNetwork` resources
-
-```bash
-git clone https://gitlab.com/startx1/helm.git
-cd helm-repository/charts/cluster-cudn/examples/argocd/
-oc apply -k .
-```
-
-The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
-The `cluster-cudn-app` Application must **not** use the `CreateNamespace=true` sync option: the tenant namespaces have to be created
-by the chart templates so that they carry the `k8s.ovn.org/primary-user-defined-network` label from the start. The AppProject
-whitelists the cluster-scoped kinds created by the chart (`Namespace` and `ClusterUserDefinedNetwork`) and the Application ignores
-the `k8s.ovn.org/user-defined-network-protection` finalizer added by OVN-Kubernetes on every network.
-
 ## Values dictionary
 
 ### context values dictionary
@@ -275,6 +253,28 @@ the `k8s.ovn.org/user-defined-network-protection` finalizer added by OVN-Kuberne
 | project.enabled                  | `false`                       | Enable the `project` sub-chart (namespace hosting the namespaced networks by default)       |
 | project.project.name             | `default-cudn`                | Name of the project namespace                                                               |
 | project.project.additionalLabels |                               | String of labels, set it to `k8s.ovn.org/primary-user-defined-network: ""` for a primary UDN |
+
+## Deploy with ArgoCD
+
+### Deploy via ArgoCD Application
+
+Deploy `cluster-cudn` using two dedicated ArgoCD Applications - one per concern - sharing the same AppProject (there is no
+operator Application because the user-defined network APIs are built into OpenShift):
+
+- `cluster-cudn-project` (sync-wave `1`) creates the `default-cudn` project with the `project` sub-chart
+- `cluster-cudn-app` (sync-wave `10`) creates the tenant namespaces, the `ClusterUserDefinedNetwork` and the `UserDefinedNetwork` resources
+
+```bash
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-cudn/examples/argocd/
+oc apply -k .
+```
+
+The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
+The `cluster-cudn-app` Application must **not** use the `CreateNamespace=true` sync option: the tenant namespaces have to be created
+by the chart templates so that they carry the `k8s.ovn.org/primary-user-defined-network` label from the start. The AppProject
+whitelists the cluster-scoped kinds created by the chart (`Namespace` and `ClusterUserDefinedNetwork`) and the Application ignores
+the `k8s.ovn.org/user-defined-network-protection` finalizer added by OVN-Kubernetes on every network.
 
 ## History
 

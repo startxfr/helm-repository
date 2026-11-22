@@ -211,60 +211,6 @@ Example values files shipped with the chart, to use with `helm install -f <file>
 helm install cluster-metallb startx/cluster-metallb -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-metallb/values-startx.yaml
 ```
 
-## Deploy with ArgoCD
-
-### Deploy via ArgoCD Application
-
-Deploy `cluster-metallb` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject:
-
-```bash
-git clone https://gitlab.com/startx1/helm.git
-cd helm-repository/charts/cluster-metallb/examples/argocd/
-oc apply -k .
-```
-
-| Application                | Wave   | Enabled flags                                | Destination      |
-| -------------------------- | ------ | -------------------------------------------- | ---------------- |
-| `cluster-metallb-project`  | `"1"`  | `project.enabled: true`, all others `false`  | `metallb-system` |
-| `cluster-metallb-operator` | `"5"`  | `operator.enabled: true`, all others `false` | `metallb-system` |
-| `cluster-metallb-app`      | `"10"` | `metallb.enabled: true`, all others `false`  | `metallb-system` |
-
-The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
-The `cluster-metallb-app` Application only starts MetalLB: the pools and their advertisements are specific to each cluster, add
-`ipAddressPools` and `l2Advertisements` (or the BGP blocks) with your own addresses to its values and switch them to `enabled: true`.
-The Subscription uses `installPlanApproval: Manual`: the `cluster-metallb-app` Application stays out of sync until the InstallPlan of
-the operator is approved (`SkipDryRunOnMissingResource=true` lets the sync start before the MetalLB APIs exist).
-
-## External secrets
-
-The secrets of the `secrets` block (password of a BGP session) can come from an external store (Vault, AWS Secrets Manager...)
-through the [External Secrets Operator](https://external-secrets.io) instead of the chart values. With
-`externalSecret.enabled: true`, the chart renders an `ExternalSecret` producing the Secret of the same name and type in the
-MetalLB namespace, so the `passwordSecret` of the BGP peer is unchanged. Without `externalSecret`, the chart renders the Secret
-from `data`. Never commit a real password in a values file.
-
-```yaml
-externalSecretDefaults:
-  secretStoreRef:
-    name: vault-backend
-    kind: ClusterSecretStore
-secrets:
-  enabled: true
-  list:
-    - name: bgp-router-1
-      type: kubernetes.io/basic-auth
-      externalSecret:
-        enabled: true
-        remoteRefs:
-          password:
-            key: ocp/metallb/bgp-router-1
-            property: password
-```
-
-An `externalSecret` block accepts `secretStoreRef` and `refreshInterval` (defaults: `externalSecretDefaults`),
-`remoteRefs` (map of secret key to ESO `remoteRef`) and the raw ESO fields `data`, `dataFrom` and `template`.
-Rendering fails when no store is set or when no key source is provided.
-
 ## Values dictionary
 
 ### context values dictionary
@@ -420,6 +366,60 @@ Rendering fails when no store is set or when no key source is provided.
 | operator.subscription.operator.config.infra        | `false`            | Run the operator on infra nodes                                                      |
 | operator.operatorGroup.enabled                     | `true`             | Create the OperatorGroup of the namespace                                            |
 | operator.operatorGroup.target                      | `all-ns`           | OperatorGroup without target namespace (only install mode supported by the operator) |
+
+## Deploy with ArgoCD
+
+### Deploy via ArgoCD Application
+
+Deploy `cluster-metallb` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject:
+
+```bash
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-metallb/examples/argocd/
+oc apply -k .
+```
+
+| Application                | Wave   | Enabled flags                                | Destination      |
+| -------------------------- | ------ | -------------------------------------------- | ---------------- |
+| `cluster-metallb-project`  | `"1"`  | `project.enabled: true`, all others `false`  | `metallb-system` |
+| `cluster-metallb-operator` | `"5"`  | `operator.enabled: true`, all others `false` | `metallb-system` |
+| `cluster-metallb-app`      | `"10"` | `metallb.enabled: true`, all others `false`  | `metallb-system` |
+
+The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
+The `cluster-metallb-app` Application only starts MetalLB: the pools and their advertisements are specific to each cluster, add
+`ipAddressPools` and `l2Advertisements` (or the BGP blocks) with your own addresses to its values and switch them to `enabled: true`.
+The Subscription uses `installPlanApproval: Manual`: the `cluster-metallb-app` Application stays out of sync until the InstallPlan of
+the operator is approved (`SkipDryRunOnMissingResource=true` lets the sync start before the MetalLB APIs exist).
+
+## External secrets
+
+The secrets of the `secrets` block (password of a BGP session) can come from an external store (Vault, AWS Secrets Manager...)
+through the [External Secrets Operator](https://external-secrets.io) instead of the chart values. With
+`externalSecret.enabled: true`, the chart renders an `ExternalSecret` producing the Secret of the same name and type in the
+MetalLB namespace, so the `passwordSecret` of the BGP peer is unchanged. Without `externalSecret`, the chart renders the Secret
+from `data`. Never commit a real password in a values file.
+
+```yaml
+externalSecretDefaults:
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+secrets:
+  enabled: true
+  list:
+    - name: bgp-router-1
+      type: kubernetes.io/basic-auth
+      externalSecret:
+        enabled: true
+        remoteRefs:
+          password:
+            key: ocp/metallb/bgp-router-1
+            property: password
+```
+
+An `externalSecret` block accepts `secretStoreRef` and `refreshInterval` (defaults: `externalSecretDefaults`),
+`remoteRefs` (map of secret key to ESO `remoteRef`) and the raw ESO fields `data`, `dataFrom` and `template`.
+Rendering fails when no store is set or when no key source is provided.
 
 ## History
 

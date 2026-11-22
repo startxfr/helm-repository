@@ -123,22 +123,6 @@ Example values files shipped with the chart, to use with `helm install -f <file>
 helm install cluster-network-observability startx/cluster-network-observability -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-network-observability/values-startx.yaml
 ```
 
-## Deploy with ArgoCD
-
-### Deploy via ArgoCD Application
-
-Deploy `cluster-network-observability` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject:
-
-```bash
-git clone https://gitlab.com/startx1/helm.git
-cd helm-repository/charts/cluster-network-observability/examples/argocd/
-oc apply -k .
-```
-
-The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
-The operator adds a finalizer to the FlowCollector, ignored by the `cluster-network-observability-app` Application. Delete the
-`-app` Application first (the operator removes the netobserv workloads), then the `-operator` and `-project` ones.
-
 ## Values dictionary
 
 ### context values dictionary
@@ -198,6 +182,22 @@ The operator adds a finalizer to the FlowCollector, ignored by the `cluster-netw
 | lokiRbac.enabled           | `false`                         | Create the `netobserv-secret-watcher` (LokiStack namespace) and `netobserv-secret-creator` (flowcollector namespace) RoleBindings |
 | lokiRbac.operatorNamespace | `openshift-netobserv-operator`  | Namespace hosting the Network Observability operator                                                                 |
 | lokiRbac.serviceAccount    | `netobserv-controller-manager`  | Service account of the operator controller manager                                                                   |
+
+## Deploy with ArgoCD
+
+### Deploy via ArgoCD Application
+
+Deploy `cluster-network-observability` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject:
+
+```bash
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-network-observability/examples/argocd/
+oc apply -k .
+```
+
+The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
+The operator adds a finalizer to the FlowCollector, ignored by the `cluster-network-observability-app` Application. Delete the
+`-app` Application first (the operator removes the netobserv workloads), then the `-operator` and `-project` ones.
 
 ## History
 
