@@ -96,10 +96,23 @@ rc=$(run --check --only app)
 [[ $rc -eq 1 ]] && grep -q 'lib 21.3.4 is not published' "$W/err.log" && ok "online check refuses a pin that is not published" || bad "online check unpublished: rc=$rc $(cat "$W/err.log")"
 
 # lagging pins are reported, nothing is changed
+# lagging: the reproduced case. lagx is at 21.3.6 and pins lib 21.3.3 ; lib 21.3.7 (the fix) is published
+chart lagx 21.3.6 "  - name: lib
+    repository: $REPO
+    version: 21.3.3"
+rc=$(run --lagging --only lagx)
+[[ $rc -eq 0 ]] && grep -q 'lagx: lib pins 21.3.3, 21.3.7 is published: release lagx at a version above 21.3.7' "$W/out.log" && ok "lagging lists a dependent whose dependency was published above it, with the action" || bad "lagging lagx: rc=$rc $(cat "$W/out.log")"
+# quiet after a full release: the highest published version of lib is the version of app (21.3.7)
 rc=$(run --lagging --only app)
-[[ $rc -eq 0 ]] && grep -q 'app: lib pinned on 21.3.4, 21.3.5 is published' "$W/out.log" && ok "lagging report: the highest version the rule allows" || bad "lagging: rc=$rc $(cat "$W/out.log")"
+[[ $rc -eq 0 ]] && ! [[ -s $W/out.log ]] && ok "lagging: a dependency whose highest published version is the chart own version is not listed" || bad "lagging app: rc=$rc $(cat "$W/out.log")"
 rc=$(run --lagging --only quoted)
-[[ $rc -eq 0 ]] && ! [[ -s $W/out.log ]] && ok "lagging: nothing is reported for a pin already on the highest allowed version (21.3.7 and 21.4.0 are not allowed for app)" || bad "lagging noise: rc=$rc $(cat "$W/out.log")"
+[[ $rc -eq 0 ]] && ! [[ -s $W/out.log ]] && ok "lagging: nothing for a pin already on the highest published version (21.4.0 is another minor)" || bad "lagging quoted: rc=$rc $(cat "$W/out.log")"
+# the release path: lagx released at its default next version 21.3.7 cannot take lib 21.3.7: visible warning, no failure
+rc=$(run --apply --only lagx --below 21.3.7)
+[[ $rc -eq 0 ]] && grep -q 'WARNING lagx: lib 21.3.7 is published and cannot be pinned by a release at 21.3.7: release lagx at a version above 21.3.7' "$W/err.log" && [[ $(pin lagx lib) == 21.3.5 ]] && ok "a release that cannot take a published dependency warns (pin resolved to 21.3.5)" || bad "warning: rc=$rc pin=$(pin lagx lib) $(cat "$W/err.log")"
+rc=$(run --apply --only lagx --below 21.3.8)
+[[ $rc -eq 0 ]] && [[ $(pin lagx lib) == 21.3.7 ]] && ! grep -q WARNING "$W/err.log" && ok "a release above the dependency takes it (21.3.7) without warning" || bad "release above: rc=$rc pin=$(pin lagx lib) $(cat "$W/err.log")"
+rm -rf "$T/charts/lagx"
 
 # index unreachable: exit 2, nothing written, no fallback on the local tree
 cp "$T/charts/app/Chart.yaml" "$W/app.before"
@@ -113,6 +126,9 @@ for kind in 'entries: [lib]' 'entries: {lib: null}' 'entries: {lib: "21.3.5"}' '
     rc=$(python3 -I "$T/.tools/bump-pins.py" --index "$REPO=$W/bad-index.yaml" --apply --only app >/dev/null 2>"$W/err.log"; echo $?)
     [[ $rc -eq 2 ]] && ! grep -q Traceback "$W/err.log" && grep -q 'unreachable or unreadable' "$W/err.log" && cmp -s "$W/app.before" "$T/charts/app/Chart.yaml" || bad "malformed index '$kind': rc=$rc $(tail -1 "$W/err.log")"
 done
+printf 'apiVersion: v1\nentries: {lib: [{version: 18.11}]}\n' > "$W/bad-index.yaml"
+python3 -I "$T/.tools/bump-pins.py" --index "$REPO=$W/bad-index.yaml" --apply --only app >/dev/null 2>"$W/err.log"
+grep -q "entry 'lib' has the version 18.11 that is not a string" "$W/err.log" && grep -q 'quote it' "$W/err.log" && ok "the message names the entry, the version and the fix" || bad "message: $(cat "$W/err.log")"
 ok "malformed indexes (list, null, string, version without string, no entries) exit 2 without traceback"
 
 # a version with a leading zero is read as published, never as another version, and never selected

@@ -5,7 +5,7 @@ Usage (from anywhere):
   .tools/bump-pins.py [--apply] [--only chart] [--below X.Y.Z]   resolve the pins against the published index
   .tools/bump-pins.py --check-offline [--only chart]              pin < chart version, no network (CI)
   .tools/bump-pins.py --check [--only chart]                      offline checks + the pinned version is published
-  .tools/bump-pins.py --lagging [--only chart]                    report the pins older than the highest allowed published version
+  .tools/bump-pins.py --lagging [--only chart]                    report the dependents that must be released again to take a published dependency
   .tools/bump-pins.py --levels                                    list the charts by depth in the internal dependency graph (no network)
 
 An internal dependency is a `dependencies[]` item whose `repository` is served by this repository bucket
@@ -73,7 +73,7 @@ p.add_argument('--only', help='restrict to this single chart')
 p.add_argument('--below', help='version a chart is about to get (default: its current version)')
 p.add_argument('--check-offline', action='store_true', help='pin < chart version, no network')
 p.add_argument('--check', action='store_true', help='offline checks + the pinned version is in the published index')
-p.add_argument('--lagging', action='store_true', help='report the pins older than the highest allowed published version (no change)')
+p.add_argument('--lagging', action='store_true', help='report the pins below the highest published version of the dependency (same MAJOR.MINOR); a dependency whose highest published version is the chart own version is not listed (after a full release every dependent lags by one by construction); no change')
 p.add_argument('--levels', action='store_true', help='list the charts by depth in the internal dependency graph (no network)')
 p.add_argument('--index', action='append', default=[], metavar='URL=FILE', help='local copy of an index.yaml')
 a = p.parse_args()
@@ -118,12 +118,12 @@ def published(repo):
         out = {}
         for name, versions in entries.items():
             if not isinstance(name, str) or not isinstance(versions, list) or not all(isinstance(v, dict) for v in versions):
-                raise ValueError(f'entry {name!r} is not a list of chart versions')
+                raise ValueError(f'entry {name!r} is not a list of chart versions: fix {repo}/index.yaml (helm repo index regenerates it)')
             found = {}
             for v in versions:
                 s = v.get('version')
                 if not isinstance(s, str):
-                    raise ValueError(f'entry {name!r} has a version that is not a string')
+                    raise ValueError(f'entry {name!r} has the version {s!r} that is not a string (an unquoted legacy version such as 18.11?): quote it in {repo}/index.yaml, or regenerate the index with helm repo index')
                 if vtuple(s):  # a version that is not a canonical X.Y.Z is never selected
                     found[vtuple(s)] = s
             out[name] = found
@@ -182,7 +182,7 @@ if a.levels:
     sys.exit(0)
 
 
-changes, errors, lagging, writes = [], [], [], {}
+changes, errors, lagging, writes, warnings = [], [], [], {}, []
 for f in sorted(glob.glob('charts/*/Chart.yaml')):
     text = open(f).read()
     lines = text.split('\n')
@@ -203,10 +203,11 @@ for f in sorted(glob.glob('charts/*/Chart.yaml')):
             continue  # upstream chart or other registry
         pt = vtuple(pin)
         if a.lagging:
-            # only a version the rule would allow now: of the same MAJOR.MINOR, strictly lower than the chart version
-            latest = max((t for t in published(repo).get(name, {}) if own and t[:2] == own[:2] and t < own), default=None)
-            if pt and latest and latest > pt:
-                lagging.append(f'{chart}: {label} pinned on {pin}, {vstr(latest)} is published')
+            # the highest published version of the same MAJOR.MINOR, whatever the chart version: the chart must be released
+            # at a version ABOVE it to take it (the pin is always strictly below the version being released)
+            latest = max((t for t in published(repo).get(name, {}) if own and t[:2] == own[:2]), default=None)
+            if pt and latest and latest > pt and latest != own:
+                lagging.append(f'{chart}: {label} pins {pin}, {vstr(latest)} is published: release {chart} at a version above {vstr(latest)}')
             continue
         if a.check_offline or a.check:
             if pt is None:
@@ -225,6 +226,10 @@ for f in sorted(glob.glob('charts/*/Chart.yaml')):
             errors.append(f'{chart}: {name} has no version below {vstr(target)} published in {repo}: publish {name} first, '
                           'in a release of its own')
             continue
+        newer = [t for t in pub if t[:2] == target[:2] and t >= target]
+        if newer:  # published, but not below the version being released: the pin cannot take it
+            warnings.append(f'{chart}: {label} {pub[max(newer)]} is published and cannot be pinned by a release at {vstr(target)}: '
+                            f'release {chart} at a version above {vstr(max(newer))} to take it')
         new = pub[max(candidates)]  # the version string as published
         if pin != new:
             changes.append((chart, label, pin, new))
@@ -243,10 +248,12 @@ for c in changes:
     print('%s: %s %s -> %s' % c)
 for l in lagging:
     print(l)
+for w in warnings:
+    sys.stderr.write('WARNING ' + w + '\n')
 for e in errors:
     sys.stderr.write('FAIL ' + e + '\n')
 if a.lagging:
-    sys.stderr.write('%d pin(s) older than the latest published version\n' % len(lagging))
+    sys.stderr.write('%d dependent(s) to release again to take a published dependency\n' % len(lagging))
 elif a.check or a.check_offline:
     sys.stderr.write('%d wrong pin(s)\n' % len(errors) if errors else 'ok: every internal pin is lower than its chart version%s\n'
                      % (' and published' if a.check else ''))
