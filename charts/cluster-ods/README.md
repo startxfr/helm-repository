@@ -54,7 +54,7 @@ helm install cluster-ods startx/cluster-ods
 
 The `DataScienceCluster` and `DSCInitialization` resources use the `v2` API (`datasciencecluster.opendatahub.io/v2`, `dscinitialization.opendatahub.io/v2`), required by RHOAI 3.x. Set `DataScienceCluster.apiVersion` (or `DSCInitialization.apiVersion`) to the `v1` API for RHOAI 2.x, and adapt `DataScienceCluster.spec` accordingly: the default `spec` lists the components of RHOAI 2.x, so with the `v2` API replace it with the components of your RHOAI release. The `OperatorGroup` `providedAPIs` list both the `v1` and `v2` APIs. Set `DataScienceCluster.clusterScoped: true` to omit the `metadata.namespace` that the cluster scoped `DataScienceCluster` does not need (it is rendered by default). `values-startx_noinfra-rhoai3.yaml` is an overlay with a `DSCInitialization` and a `DataScienceCluster` spec for RHOAI 3.x, taken from a cluster running rhods-operator 3.6.0-ea.2: use it after `values-startx_noinfra.yaml` and check its components against your RHOAI release. Both resources accept `labels` and `annotations` maps. `DSCInitialization.enabled` creates a cluster scoped `DSCInitialization` (free `spec`, `applicationsNamespace` overrides `spec.applicationsNamespace`) before the `DataScienceCluster`.
 
-## Other available values
+## Values files
 
 - **startx** : rh-ods cluster wide service configuration using rh-ods operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ods/values-startx.yaml))
 
@@ -101,3 +101,4 @@ oc apply -k .
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

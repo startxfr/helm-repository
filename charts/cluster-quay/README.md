@@ -150,7 +150,7 @@ helm install cluster-quay-operator startx/cluster-quay --set project.enabled=fal
 helm install cluster-quay-app startx/cluster-quay --set project.enabled=false,operator.enabled=false,quay.enabled=true
 ```
 
-## Other available values
+## Values files
 
 - **startx-quay** : Quay operator and registry of the previous releases, every component managed (see [values-startx-quay.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-quay/values-startx-quay.yaml))
 - **startx-secvuln** : Container Security operator (see [values-startx-secvuln.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-quay/values-startx-secvuln.yaml))
@@ -473,3 +473,4 @@ the `project` sub-chart (`crunchy.project.enabled: false`) when they must stay w
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

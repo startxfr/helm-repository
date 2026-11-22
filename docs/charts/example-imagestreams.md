@@ -36,69 +36,6 @@ helm show chart startx/example-imagestreams
 helm install example-imagestreams startx/example-imagestreams
 ```
 
-## Other available values
-
-- **cdf-poc** : [values-cdf-poc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-imagestreams/values-cdf-poc.yaml)
-- **demo** : [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-imagestreams/values-demo.yaml)
-- **prgmk** : [values-prgmk.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-imagestreams/values-prgmk.yaml)
-- **startx** : [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-imagestreams/values-startx.yaml)
-- **startx_noinfra** : [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-imagestreams/values-startx_noinfra.yaml)
-- **sxcm** : [values-sxcm.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-imagestreams/values-sxcm.yaml)
-
-```bash
-helm install example-imagestreams startx/example-imagestreams -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-imagestreams/values-cdf-poc.yaml
-```
-
-## Values dictionary
-
-### context values dictionary
-
-| Key                 | Default   | Description                                                                       |
-| ------------------- | --------- | --------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
-| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
-| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
-| context.component   | demo      | Component name of this application (logical tenant)                               |
-| context.app         | example-imagestreams     | Application name (functional tenant, default use Chart name)                     |
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
-
-### chart values dictionary
-
-| Key          | Default | Description                             |
-| ------------ | ------- | --------------------------------------- |
-| enabled      | false   | Enable the create of the images streams |
-| imagestreams | []      | List of imagestreams (see next section) |
-
-### imagestreams values dictionary
-
-| Key         | Default       | Description                                 |
-| ----------- | ------------- | ------------------------------------------- |
-| name        | default       | Image stream name                           |
-| enabled     | true          | enable the image stream                     |
-| namespace   | openshift     | Namespace were imagestream must resid       |
-| displayName | Default image | Display name of the image stream            |
-| labels      | string        | Labels for the image stream                 |
-| tags        | []            | List of imagestreamstags (see next section) |
-
-### imagestreamstags values dictionary
-
-| Key              | Default        | Description                                                   |
-| ---------------- | -------------- | ------------------------------------------------------------- |
-| name             | latest         | tag name                                                      |
-| enabled          | true           | enable the image stream tag                                   |
-| desc             | {}             | description of the image stream                               |
-| desc.iconClass   | icon-openshift | icon class to use for this image and tags                     |
-| desc.provider    | startx         | name of the provider                                          |
-| desc.displayName | Default linux  | Display name of this tag                                      |
-| desc.description | string         | desription of this tag                                        |
-| desc.tags        | string         | list of tags for this IST                                     |
-| desc.supports    | string         | supported service                                             |
-| desc.sampleRepo  | url            | sample repository                                             |
-| source           | {}             | source for this image stream tag                              |
-| source.kind      | docker         | kind of source for this tag (is or docker, default is docker) |
-| source.image     | string         | Image source (from repository or image streams) (mandatory)   |
-| source.namespace | openshift      | Image source namespace (for kind is)                          |
-
 ## Values files
 
 ### Default values file (values.yaml)
@@ -175,7 +112,66 @@ Imagestreams of container image used in the sxv4 project (depend on the sxtartx 
 helm install example-imagestreams-sxv4 startx/example-imagestreams -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-sxv4.yaml
 ```
 
-## ArgoCD deployment
+### Other values files
+
+- **cdf-poc** : [values-cdf-poc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-imagestreams/values-cdf-poc.yaml)
+- **demo** : [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-imagestreams/values-demo.yaml)
+- **prgmk** : [values-prgmk.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-imagestreams/values-prgmk.yaml)
+- **startx_noinfra** : [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-imagestreams/values-startx_noinfra.yaml)
+- **sxcm** : [values-sxcm.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-imagestreams/values-sxcm.yaml)
+helm install example-imagestreams startx/example-imagestreams -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-imagestreams/values-cdf-poc.yaml
+
+## Values dictionary
+
+### context values dictionary
+
+| Key                 | Default   | Description                                                                       |
+| ------------------- | --------- | --------------------------------------------------------------------------------- |
+| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
+| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
+| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
+| context.component   | demo      | Component name of this application (logical tenant)                               |
+| context.app         | example-imagestreams     | Application name (functional tenant, default use Chart name)                     |
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
+
+### chart values dictionary
+
+| Key          | Default | Description                             |
+| ------------ | ------- | --------------------------------------- |
+| enabled      | false   | Enable the create of the images streams |
+| imagestreams | []      | List of imagestreams (see next section) |
+
+### imagestreams values dictionary
+
+| Key         | Default       | Description                                 |
+| ----------- | ------------- | ------------------------------------------- |
+| name        | default       | Image stream name                           |
+| enabled     | true          | enable the image stream                     |
+| namespace   | openshift     | Namespace were imagestream must resid       |
+| displayName | Default image | Display name of the image stream            |
+| labels      | string        | Labels for the image stream                 |
+| tags        | []            | List of imagestreamstags (see next section) |
+
+### imagestreamstags values dictionary
+
+| Key              | Default        | Description                                                   |
+| ---------------- | -------------- | ------------------------------------------------------------- |
+| name             | latest         | tag name                                                      |
+| enabled          | true           | enable the image stream tag                                   |
+| desc             | {}             | description of the image stream                               |
+| desc.iconClass   | icon-openshift | icon class to use for this image and tags                     |
+| desc.provider    | startx         | name of the provider                                          |
+| desc.displayName | Default linux  | Display name of this tag                                      |
+| desc.description | string         | desription of this tag                                        |
+| desc.tags        | string         | list of tags for this IST                                     |
+| desc.supports    | string         | supported service                                             |
+| desc.sampleRepo  | url            | sample repository                                             |
+| source           | {}             | source for this image stream tag                              |
+| source.kind      | docker         | kind of source for this tag (is or docker, default is docker) |
+| source.image     | string         | Image source (from repository or image streams) (mandatory)   |
+| source.namespace | openshift      | Image source namespace (for kind is)                          |
+
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 
@@ -196,7 +192,7 @@ spec:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: example-imagestreams
     # pin an exact version in production (ADR-0004)
-    targetRevision: 21.3.397
+    targetRevision: 21.3.410
     helm:
       valueFiles:
         - values.yaml
@@ -234,3 +230,4 @@ spec:
 | 21.3.390 | 2026-11-20 | full repository release: test fix, keepalived README, aligned pins |
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

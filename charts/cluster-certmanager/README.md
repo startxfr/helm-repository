@@ -63,6 +63,20 @@ helm install cluster-certmanager startx/cluster-certmanager -f https://raw.githu
 
 `clusterIssuer.list[]` items accept an `annotations` map merged over the default ArgoCD sync-wave (`1`), for example `argocd.argoproj.io/sync-wave: "19"` or `argocd.argoproj.io/sync-options: Prune=false`. The `spec` is a YAML string or a YAML map. A `ClusterIssuer` is cluster scoped: set `clusterScoped: true` on an item to omit `metadata.namespace` (default is `false`, the namespace defaults to the project one). `certmanager.list[]` items also accept an `annotations` map that overrides the default sync-wave (`20`).
 
+## Values files
+
+Example values files shipped with the chart, to use with `helm install -f <file>` :
+
+- **demo** : STARTX cluster configuration, see values.yaml for the parameters (see [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-certmanager/values-demo.yaml))
+- **mg** : STARTX cluster configuration, see values.yaml for the parameters (see [values-mg.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-certmanager/values-mg.yaml))
+- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-certmanager/values-startx.yaml))
+- **startx_noinfra** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-certmanager/values-startx_noinfra.yaml))
+- `examples/argocd/` : 5 example manifest(s) (see the ArgoCD or usage sections)
+
+```bash
+helm install cluster-certmanager startx/cluster-certmanager -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-certmanager/values-demo.yaml
+```
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -99,3 +113,4 @@ oc apply -k .
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

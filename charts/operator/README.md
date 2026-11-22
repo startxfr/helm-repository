@@ -36,54 +36,6 @@ helm show chart startx/operator
 helm install operator startx/operator
 ```
 
-## Other available values
-
-- **3scale-0.12.13** : [values-3scale-0.12.13.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-3scale-0.12.13.yaml)
-- **3scale-0.6.0** : [values-3scale-0.6.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-3scale-0.6.0.yaml)
-- **couchbase-1.2.2** : [values-couchbase-1.2.2.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-couchbase-1.2.2.yaml)
-- **couchbase-2.1.0** : [values-couchbase-2.1.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-couchbase-2.1.0.yaml)
-- **couchbase-2.8.0** : [values-couchbase-2.8.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-couchbase-2.8.0.yaml)
-- **crunchy-5.2.0** : [values-crunchy-5.2.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crunchy-5.2.0.yaml)
-- **crunchy-5.8.1** : [values-crunchy-5.8.1.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crunchy-5.8.1.yaml)
-- **crw-2.11.0** : [values-crw-2.11.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crw-2.11.0.yaml)
-- and 12 more `values-*.yaml` files: see the [chart directory](https://github.com/startxfr/helm-repository/tree/master/charts/operator)
-
-```bash
-helm install operator startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-3scale-0.12.13.yaml
-```
-
-## Values dictionary
-
-### context values dictionary
-
-| Key                 | Default   | Description                                                                       |
-| ------------------- | --------- | --------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
-| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
-| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
-| context.component   | demo      | Component name of this application (logical tenant)                               |
-| context.app         | operator  | Application name (functional tenant, default use Chart name)                     |
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
-
-### operator values dictionary
-
-| Key                                    | Default               | Description                                                                 |
-| -------------------------------------- | --------------------- | --------------------------------------------------------------------------- |
-| subscription.enabled                   | true                  | Enable deployment of the subscription                                       |
-| subscription.name                      | default               | name of the subscription (mandatory)                                        |
-| subscription.namespace                 | default               | namespace of the subscription                                               |
-| subscription.version                   | v0.1.0                | version of the operator to deploy (mandatory)                               |
-| subscription.operator                  | object                | Configuration of the CRW operator                                           |
-| subscription.operator.channel          | latest                | The CRW channel to use                                                      |
-| subscription.operator.name             | default               | name of the operator (if not set, use the subscription name)                |
-| subscription.operator.csv              | default               | name of the CSV (if not set, use the subscription name)                     |
-| subscription.operator.source.name      | redhat-operators      | name of the operator source                                                 |
-| subscription.operator.source.namespace | openshift-marketplace | Namespace of the operator source                                            |
-| operatorGroup.enabled                  | true                  | Enable deployment of an operatorGroup for the subscription                  |
-| operatorGroup.name                     | default               | name of the operatorGroup (if not set, use the subscription name)           |
-| operatorGroup.namespace                | default               | namespace of the operatorGroup (if not set, use the subscription namespace) |
-| operatorGroup.providedAPIs             | default.local         | ist of the provided APIs (mandatory if enabled)                             |
-
 ## Values files
 
 ### Default values file (values.yaml)
@@ -145,7 +97,50 @@ Complete deployment of a 3scale v0.6.0 operator with the following characteristi
 helm install operator-3scale startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-3scale-0.6.0.yaml
 ```
 
-## ArgoCD deployment
+### Other values files
+
+- **3scale-0.12.13** : [values-3scale-0.12.13.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-3scale-0.12.13.yaml)
+- **couchbase-1.2.2** : [values-couchbase-1.2.2.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-couchbase-1.2.2.yaml)
+- **couchbase-2.1.0** : [values-couchbase-2.1.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-couchbase-2.1.0.yaml)
+- **couchbase-2.8.0** : [values-couchbase-2.8.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-couchbase-2.8.0.yaml)
+- **crunchy-5.2.0** : [values-crunchy-5.2.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crunchy-5.2.0.yaml)
+- **crunchy-5.8.1** : [values-crunchy-5.8.1.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crunchy-5.8.1.yaml)
+- **crw-2.11.0** : [values-crw-2.11.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crw-2.11.0.yaml)
+helm install operator startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-3scale-0.12.13.yaml
+
+## Values dictionary
+
+### context values dictionary
+
+| Key                 | Default   | Description                                                                       |
+| ------------------- | --------- | --------------------------------------------------------------------------------- |
+| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
+| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
+| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
+| context.component   | demo      | Component name of this application (logical tenant)                               |
+| context.app         | operator  | Application name (functional tenant, default use Chart name)                     |
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
+
+### operator values dictionary
+
+| Key                                    | Default               | Description                                                                 |
+| -------------------------------------- | --------------------- | --------------------------------------------------------------------------- |
+| subscription.enabled                   | true                  | Enable deployment of the subscription                                       |
+| subscription.name                      | default               | name of the subscription (mandatory)                                        |
+| subscription.namespace                 | default               | namespace of the subscription                                               |
+| subscription.version                   | v0.1.0                | version of the operator to deploy (mandatory)                               |
+| subscription.operator                  | object                | Configuration of the CRW operator                                           |
+| subscription.operator.channel          | latest                | The CRW channel to use                                                      |
+| subscription.operator.name             | default               | name of the operator (if not set, use the subscription name)                |
+| subscription.operator.csv              | default               | name of the CSV (if not set, use the subscription name)                     |
+| subscription.operator.source.name      | redhat-operators      | name of the operator source                                                 |
+| subscription.operator.source.namespace | openshift-marketplace | Namespace of the operator source                                            |
+| operatorGroup.enabled                  | true                  | Enable deployment of an operatorGroup for the subscription                  |
+| operatorGroup.name                     | default               | name of the operatorGroup (if not set, use the subscription name)           |
+| operatorGroup.namespace                | default               | namespace of the operatorGroup (if not set, use the subscription namespace) |
+| operatorGroup.providedAPIs             | default.local         | ist of the provided APIs (mandatory if enabled)                             |
+
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 
@@ -185,3 +180,4 @@ The automated sync policy ensures ArgoCD reconciles the operator subscription wh
 | 21.3.390 | 2026-11-20 | full repository release: test fix, keepalived README, aligned pins |
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

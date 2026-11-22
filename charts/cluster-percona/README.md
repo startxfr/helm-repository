@@ -51,7 +51,7 @@ helm show chart startx/cluster-percona
 helm install cluster-percona startx/cluster-percona
 ```
 
-## Deploy this helm chart with ArgoCD
+## Step by step deployment with ArgoCD
 
 ### 1. Create the project
 
@@ -70,7 +70,7 @@ project: default
 source:
     path: charts/cluster-percona/
     repoURL: 'https://gitlab.com/startx1/helm.git'
-    targetRevision: 21.3.398
+    targetRevision: 21.3.410
     helm:
     valueFiles:
     - values-demo.yaml
@@ -97,7 +97,7 @@ project: default
 source:
     path: charts/cluster-percona/
     repoURL: 'https://gitlab.com/startx1/helm.git'
-    targetRevision: 21.3.398
+    targetRevision: 21.3.410
     helm:
     valueFiles:
     - values-demo.yaml
@@ -124,7 +124,7 @@ project: default
 source:
     path: charts/cluster-percona/
     repoURL: 'https://gitlab.com/startx1/helm.git'
-    targetRevision: 21.3.398
+    targetRevision: 21.3.410
     helm:
     valueFiles:
     - values-demo.yaml
@@ -160,7 +160,7 @@ helm install cluster-percona-operator startx/cluster-percona --set project.enabl
 helm install cluster-percona-instance startx/cluster-percona --set project.enabled=false,operator.enabled=false,cluster.enabled=true
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Percona operator and a demo cluster (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-percona/values-startx.yaml))
 - **startx-ha** : one highly available cluster, two instances, synchronous replication, S3 backups, network policy (see [values-startx-ha.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-percona/values-startx-ha.yaml))
@@ -316,3 +316,4 @@ pattern, using `values-startx_noinfra.yaml`. For a highly available cluster, rep
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

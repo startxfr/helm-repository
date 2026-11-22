@@ -51,7 +51,7 @@ Complete deployment of an EFS storage configuration with the following character
 helm install cluster-storage-efs startx/cluster-storage-efs
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Startx AWS EFS cluster wide service configuration using EFS operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage-efs/values-startx.yaml))
 
@@ -96,3 +96,4 @@ oc apply -k .
 | 21.3.390 | 2026-11-20 | full repository release: test fix, keepalived README, aligned pins |
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

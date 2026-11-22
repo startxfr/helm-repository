@@ -85,7 +85,7 @@ A workload is terminated only if it opted in (see the last usage example).
 | monkey.config.whitelistedNamespaces | default, demo-*, example-* | Namespaces where pods can be terminated                                                                                     |
 | monkey.config.blacklistedNamespaces | kube-system, openshift-*   | Namespaces never touched                                                                                                    |
 
-## Other available values
+## Values files
 
 - **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-monkey/values-startx-project.yaml), namespace `startx-chaos-monkey` only
 - **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-monkey/values-startx-deploy.yaml), kube-monkey named `startx-monkey` in the namespace `startx-chaos-monkey`
@@ -153,7 +153,7 @@ oc -n myapp-dev patch deployment myapp --type merge -p '{
   "spec": {"template": {"metadata": {"labels": {"kube-monkey/enabled": "enabled", "kube-monkey/identifier": "myapp"}}}}}'
 ```
 
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 One AppProject and two Applications : `chaos-monkey-project` (wave 1, the namespace) then `chaos-monkey-instance` (wave 5, kube-monkey in dry-run mode).
 The files are in [examples/argocd](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-monkey/examples/argocd).
@@ -194,3 +194,4 @@ finalizer : a namespace can be slow to terminate).
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

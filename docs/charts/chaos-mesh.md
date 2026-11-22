@@ -74,7 +74,7 @@ installs them at the first install and never upgrades them.
 | mesh.dashboard.rootUrl      | https://server-chaos-mesh.apps.mycluster.com | Public URL of the dashboard, to adapt to the cluster                                                                          |
 | mesh.prometheus.create      | true                                         | Deploy a Prometheus with a persistent volume                                                                                  |
 
-## Other available values
+## Values files
 
 - **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-project.yaml), namespace `startx-chaos-mesh` only
 - **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-deploy.yaml), chaos-mesh in the namespace `startx-chaos-mesh`, 3 controller replicas
@@ -157,7 +157,7 @@ spec:
 EOF
 ```
 
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 One AppProject and two Applications : `chaos-mesh-project` (wave 1, the namespace) then `chaos-mesh-instance` (wave 5, chaos-mesh).
 The files are in [examples/argocd](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-mesh/examples/argocd).
@@ -213,3 +213,4 @@ Things to know with ArgoCD :
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

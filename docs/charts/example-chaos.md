@@ -46,45 +46,6 @@ helm show chart startx/example-chaos
 helm install example-chaos startx/example-chaos
 ```
 
-## Other available values
-
-- **startx-cerberus** : [values-startx-cerberus.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-cerberus.yaml)
-- **startx-kraken** : [values-startx-kraken.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-kraken.yaml)
-- **startx-litmus** : [values-startx-litmus.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-litmus.yaml)
-- **startx-mesh** : [values-startx-mesh.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-mesh.yaml)
-- **startx-monkey** : [values-startx-monkey.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-monkey.yaml)
-- **startx-project-cerberus** : [values-startx-project-cerberus.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-project-cerberus.yaml)
-- **startx-project-kraken** : [values-startx-project-kraken.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-project-kraken.yaml)
-- **startx-project-litmus** : [values-startx-project-litmus.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-project-litmus.yaml)
-- and 3 more `values-*.yaml` files: see the [chart directory](https://github.com/startxfr/helm-repository/tree/master/charts/example-chaos)
-
-```bash
-helm install example-chaos startx/example-chaos -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-cerberus.yaml
-```
-
-## Values dictionary
-
-### context values dictionary
-
-| Key                 | Default   | Description                                                                       |
-| ------------------- | --------- | --------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
-| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
-| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
-| context.component   | demo      | Component name of this application (logical tenant)                               |
-| context.app         | example-chaos     | Application name (functional tenant, default use Chart name)                     |
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
-
-### example-chaos values dictionary
-
-| Key      | Default       | Description                                                      |
-| -------- | ------------- | ---------------------------------------------------------------- |
-| image    | fedora:latest | Image to run into the pod                                        |
-| command  | /bin/sx       | Command to run inside the container                              |
-| args     | run           | argunments to pass to the command exectuted inside the container |
-| debug    | true          | Enable debuging of the container                                 |
-| replicas | 1             | Define the number of replicas for this sxapi instance            |
-
 ## Values files
 
 ### Default values file (values.yaml)
@@ -135,7 +96,42 @@ chaos of an mariadb container image with the following characteristics :
 helm install example-chaos startx/example-chaos -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-mariadb.yaml
 ```
 
-## ArgoCD deployment
+### Other values files
+
+- **startx-cerberus** : [values-startx-cerberus.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-cerberus.yaml)
+- **startx-kraken** : [values-startx-kraken.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-kraken.yaml)
+- **startx-litmus** : [values-startx-litmus.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-litmus.yaml)
+- **startx-mesh** : [values-startx-mesh.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-mesh.yaml)
+- **startx-monkey** : [values-startx-monkey.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-monkey.yaml)
+- **startx-project-cerberus** : [values-startx-project-cerberus.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-project-cerberus.yaml)
+- **startx-project-kraken** : [values-startx-project-kraken.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-project-kraken.yaml)
+- **startx-project-litmus** : [values-startx-project-litmus.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-project-litmus.yaml)
+helm install example-chaos startx/example-chaos -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-cerberus.yaml
+
+## Values dictionary
+
+### context values dictionary
+
+| Key                 | Default   | Description                                                                       |
+| ------------------- | --------- | --------------------------------------------------------------------------------- |
+| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
+| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
+| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
+| context.component   | demo      | Component name of this application (logical tenant)                               |
+| context.app         | example-chaos     | Application name (functional tenant, default use Chart name)                     |
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
+
+### example-chaos values dictionary
+
+| Key      | Default       | Description                                                      |
+| -------- | ------------- | ---------------------------------------------------------------- |
+| image    | fedora:latest | Image to run into the pod                                        |
+| command  | /bin/sx       | Command to run inside the container                              |
+| args     | run           | argunments to pass to the command exectuted inside the container |
+| debug    | true          | Enable debuging of the container                                 |
+| replicas | 1             | Define the number of replicas for this sxapi instance            |
+
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 
@@ -156,7 +152,7 @@ spec:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: example-chaos
     # pin an exact version in production (ADR-0004)
-    targetRevision: 21.3.398
+    targetRevision: 21.3.410
     helm:
       valueFiles:
         - values.yaml
@@ -196,3 +192,4 @@ spec:
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |
