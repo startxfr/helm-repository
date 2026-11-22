@@ -38,14 +38,7 @@ helm install cluster-machine startx/cluster-machine
 
 ## Default values
 
-Deployment of machine classes :
-
-<!-- - 1 **machineSet** named **example-gp3-csi** with the following characteristics
-  - **provisioner** set to **kubernetes.io/aws-ebs**
-  - provisioner **encryption** specific parameters set to **true**
-  - machine class **reclaim policy** set to **Delete**
-  - machine class **volume expansion enabled**
-  - machine class **volume binding mode** set to **WaitForFirstConsumer** -->
+Every block of `values.yaml` is disabled (`machineConfigPool`, `machineConfig`, `machineAutoscaler`, `machineHealthCheck`, `machineSet` are all `enabled: false`), so the default values render nothing. `machineSet.list` holds one example item (`a-infra`, type `infra`, 1 replica, instance type `m6i.large`), `cluster.autoscaler.enabled` is `false`.
 
 ```bash
 # base configuration running default configuration

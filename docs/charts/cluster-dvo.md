@@ -62,6 +62,13 @@ helm install cluster-dvo-instance startx/cluster-dvo --set project.enabled=false
 helm install cluster-dvo startx/cluster-dvo -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dvo/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-dvo startx/cluster-dvo -f <file>`) :
+
+- [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dvo/values-demo.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 47 keys, by top-level key: `gra…Operator` (25), `gra…Project` (14), `operator` (3), `project` (3), `context` (1), `gra…` (1)
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dvo/values-startx_noinfra.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on `gra…Operator.subscription.operator.config.infra` (true → false), `operator.subscription.operator.config.infra` (true → false)
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -75,8 +82,6 @@ oc apply -k .
 ### Applications
 
 > DVO requires AllNamespaces scope to validate deployments across the whole cluster. The subscription goes directly into `openshift-operators` — no dedicated namespace or OperatorGroup needed.
-
-
 
 ## History
 

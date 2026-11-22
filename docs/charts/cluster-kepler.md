@@ -53,6 +53,13 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-kepler startx/cluster-kepler -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kepler/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-kepler startx/cluster-kepler -f <file>`) :
+
+- [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kepler/values-demo.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 7 keys, by top-level key: `operator` (3), `project` (3), `context` (1)
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kepler/values-startx_noinfra.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on `operator.subscription.operator.config.infra` (true → false)
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -64,8 +71,6 @@ oc apply -k .
 ```
 
 ### Applications
-
-
 
 ## History
 

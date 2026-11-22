@@ -129,22 +129,15 @@ helm install project-example-project startx/project -f https://raw.githubusercon
 
 ### Startx values file (values-startx.yaml)
 
-Complete deployment of a startx project with the following characteristics :
+Every block of this file is disabled (`project`, `rbac`, `serviceAccounts`, `dockercfg`, `networkpolicy`, `limits`, `quotas` are all `enabled: false`), so it renders nothing until you enable the blocks you need. It defines :
 
-- 1 **project** named **startx-project**
-- 4 **RBAC** rules enabled
-  - 1 **group RBAC** named **dev** binding group **dev** to role **basic-user**
-  - 1 **group RBAC** named **devops** binding group **devops** to role **edit**
-  - 1 **group RBAC** named **ops** binding group **ops** to role **admin**
-  - 1 **user RBAC** named **dev** binding user **dev** to role **basic-user**
-- 2 **networkpolicy** rules enabled
-  - 1 networkpolicy named **allow-from-openshift-ingress**
-  - 1 networkpolicy named **allow-from-same-namespace**
-- 1 **limitRange** rules enabled
-- 1 **quotas** rules enabled
+- the **project** `startx` (display name `Startx default project`, requester `startx`)
+- 5 **RBAC** groups : `students` (view); `dev` (basic-user); `devops` (basic-user); `ops` (admin); `system:authenticated` (read-only), and 1 user
+- 1 **serviceAccounts** item, 3 **dockercfg** items
+- an empty **networkpolicy** rules list, **limits** rules with every value at `0`, and **quotas** rules (`hard` section, most values at `0`): adjust them before enabling the blocks
 
 ```bash
-# base configuration running startx configuration
+# nothing is created until a block is enabled, e.g. add --set project.enabled=true
 helm install project-startx startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx.yaml
 ```
 

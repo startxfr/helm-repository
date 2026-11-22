@@ -64,6 +64,12 @@ helm install cluster-3scale startx/cluster-3scale
 helm install cluster-3scale startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-3scale/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-3scale startx/cluster-3scale -f <file>`) :
+
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-3scale/values-startx_noinfra.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 108 keys, by top-level key: `clusterCrunchy` (43), `clusterRedis` (43), `externalComponents` (20), `manager` (1), `operator` (1)
+
 ## Deploy with ArgoCD
 
 Deploy `cluster-3scale` using three dedicated ArgoCD Applications sharing the same AppProject.

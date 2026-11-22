@@ -57,6 +57,13 @@ helm install cluster-kubecost startx/cluster-kubecost
 helm install cluster-kubecost startx/cluster-kubecost -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kubecost/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-kubecost startx/cluster-kubecost -f <file>`) :
+
+- [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kubecost/values-demo.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 8 keys, by top-level key: `project` (3), `kubecost` (2), `operator` (2), `context` (1)
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kubecost/values-startx_noinfra.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on `kubecost.spec`, `project.project.additionalLabels`, `project.project.additionalLabels.openshift.io/cluster-monitoring`
+
 ## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
