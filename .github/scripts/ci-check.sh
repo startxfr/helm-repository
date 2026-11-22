@@ -28,9 +28,12 @@ CI_SPELLING=${CI_SPELLING:-all}
 # Misspellings that CLAUDE.md asks to fix on sight (ERE, case insensitive)
 SPELLING='theses resources|environement|plateform|ressource|functionnal|organisational|recommandations|others values availables|projet'
 SPELLING_GRAPHANA='graphana'
+SPELLING_GRAPHANA_EXCLUDES=(':!charts/cluster-dvo' ':!docs/charts/cluster-dvo.md')
 # Not checked: CLAUDE.md, the conventions page and checker (they quote the misspellings) and the roadmap/ADR pages, the generated indexes, the French
 # web templates, the French console links of cluster-console (plateforme, ressources...) and the cluster-dvo values
 # keys named graphana (kept for compatibility, never rename them)
+# "graphana" alone is allowed in the cluster-dvo chart and in its documentation copy, in the full and in the added-lines mode; the other
+# misspellings and every other path stay refused
 SPELLING_EXCLUDES=(':!CLAUDE.md' ':!webtpl' ':!**/webtpl/**' ':!docs/repos' ':!docs/roadmap' ':!docs/adr' ':!*.tgz' ':!*.prov' ':!*.asc' ':!.github/scripts/ci-check.sh' ':!.github/scripts/readme-conventions.py' ':!docs/contribute-conventions.md' ':!charts/cluster-console/values-m*.yaml')
 
 log() { printf '%s\n' "$*"; }
@@ -66,12 +69,13 @@ check_pins() {
 # spelling_hits_all: every offending line of the tree ("graphana" is allowed in cluster-dvo only)
 spelling_hits_all() {
     git grep -nIiE -- "$SPELLING" -- . "${SPELLING_EXCLUDES[@]}" || true
-    git grep -nIiE -- "$SPELLING_GRAPHANA" -- . "${SPELLING_EXCLUDES[@]}" ':!charts/cluster-dvo' || true
+    git grep -nIiE -- "$SPELLING_GRAPHANA" -- . "${SPELLING_EXCLUDES[@]}" "${SPELLING_GRAPHANA_EXCLUDES[@]}" || true
 }
 
-# spelling_hits_added <base>: offending lines among the lines added since <base>
+# spelling_hits_added <base>: offending lines among the lines added since <base> ("graphana" is allowed in cluster-dvo only, as in the full mode)
 spelling_hits_added() {
-    git diff -U0 "$1" -- . "${SPELLING_EXCLUDES[@]}" | grep -E '^\+[^+]' | grep -iE -- "$SPELLING|$SPELLING_GRAPHANA" || true
+    git diff -U0 "$1" -- . "${SPELLING_EXCLUDES[@]}" | grep -E '^\+[^+]' | grep -iE -- "$SPELLING" || true
+    git diff -U0 "$1" -- . "${SPELLING_EXCLUDES[@]}" "${SPELLING_GRAPHANA_EXCLUDES[@]}" | grep -E '^\+[^+]' | grep -iE -- "$SPELLING_GRAPHANA" || true
 }
 
 check_spelling() {
