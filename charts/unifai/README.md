@@ -125,7 +125,7 @@ spec:
   source:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.398
+    targetRevision: 21.3.399
     helm:
       values: |
         stack:
@@ -156,7 +156,7 @@ spec:
   source:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.398
+    targetRevision: 21.3.399
     helm:
       # The definitions belong to the operator Application
       skipCrds: true
@@ -360,3 +360,4 @@ kubectl -n unifai logs deploy/unifai-operator-controller-manager
 | 21.3.393 | 2026-11-21 | unifai: UnifAI v0.1.75 (images pinned by digest); no CRD or RBAC change |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
+| 21.3.399 | 2026-11-22 | update: UnifAI v0.1.76 (images pinned by digest), document MAS_HITL_TIMEOUT_SECONDS |
