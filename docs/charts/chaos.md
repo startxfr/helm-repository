@@ -258,7 +258,7 @@ oc apply -k examples/argocd/
 - **Finalizer** : every Application carries `resources-finalizer.argocd.argoproj.io`; delete the Applications before the AppProject.
 - **Order** : the examples set no sync wave. `chaos-kraken-instance` and `chaos-pipeline-instance` point at the cerberus service of `chaos-cerberus`, so sync `chaos-cerberus-instance` first.
 - **chaos-mesh** : its Application uses `ServerSideApply=true` and `ignoreDifferences` on the generated certificates and webhook `caBundle` fields (see the `chaos-mesh` README).
-- **Version** : `targetRevision: 21.3.416
+- **Version** : `targetRevision: 21.3.418
 - **cluster-argocd** : `values-app-chaos.yaml` of the `cluster-argocd` chart deploys the same six tools from the git repository (AppProject `chaos-all`, sync wave 50, and 54 for `chaos-pipeline`).
 - **AppProject** : 7 destination namespaces (`chaos-cerberus`, `chaos-kraken`, `chaos-pipeline`, `chaos-litmus`, `chaos-mesh`, `chaos-monkey`, `default`) and the cluster resources the tools need (namespaces, SCC, cluster roles, CRDs, chaos-mesh webhooks).
 
@@ -293,3 +293,4 @@ oc apply -k examples/argocd/
 | 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |
 | 21.3.412 | 2026-11-22 | full repository release: internal pins on the previous published version (ADR-0006) |
 | 21.3.416 | 2026-11-23 | stable update: chart fixes (project, cluster-mongo, cluster-oadp, cluster-pipeline, cluster-machine, example-catalog); cluster-dvo accepts the grafana keys next to its historical keys, which keep priority |
+| 21.3.418 | 2026-11-23 | commit a stable release of all charts |
