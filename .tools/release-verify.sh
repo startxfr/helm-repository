@@ -8,10 +8,11 @@
 #   pins      every internal dependency (served by this bucket and a chart of this repository) is pinned on a version strictly lower than <version> (ADR-0006) that this bucket serves;
 #             releases before PINS_RULE_FROM (default 21.3.412) predate the rule: a pin equal to the release is accepted, the pin must only be served
 #   digest    sha256 of the .tgz == digest of the entry in the repository index.yaml
-#   content   README.md and values.yaml of the package == the files of git HEAD (a chart whose .helmignore excludes *.md
-#             ships no README: reported as FAIL, cluster-keepalived)
+#   content   README.md and values.yaml of the package == the files of the git ref CONTENT_REF (default: the tag named <version> when it
+#             exists, else HEAD: commits made after the release do not change the files that were packaged; a chart whose .helmignore
+#             excludes *.md ships no README: reported as FAIL, cluster-keepalived)
 # Environment: BASE (default https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com), JOBS (default 8),
-#              REPOS (default "stable 21"), KEEP=1 keeps the download directory.
+#              REPOS (default "stable 21"), KEEP=1 keeps the download directory, CONTENT_REF (git ref of the content check, see above).
 # Run it from inside the repository (or set ROOT). Exit code: 0 when every check passes, 1 otherwise. Needs curl, helm, tar, sha256sum, python3 (PyYAML), git.
 set -uo pipefail
 VERSION=${1:?usage: release-verify.sh <version> [chart ...]}; shift || true
@@ -20,7 +21,12 @@ BASE=${BASE:-https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com}
 JOBS=${JOBS:-8}; REPOS=${REPOS:-"stable 21"}
 W=$(mktemp -d); [[ ${KEEP:-0} == 1 ]] || trap 'rm -rf "$W"' EXIT
 PINS_RULE_FROM=${PINS_RULE_FROM:-21.3.412}   # first release that follows ADR-0006 (pin strictly lower than the release)
-export BASE VERSION W ROOT REPOS PINS_RULE_FROM
+if [[ -z ${CONTENT_REF:-} ]]; then
+    if git rev-parse -q --verify "refs/tags/$VERSION^{commit}" >/dev/null; then CONTENT_REF=$VERSION; else CONTENT_REF=HEAD; fi
+fi
+git rev-parse -q --verify "$CONTENT_REF^{commit}" >/dev/null || { echo "FAIL CONTENT_REF $CONTENT_REF is not a git commit, tag or branch"; exit 2; }
+echo "note  content is compared with git $CONTENT_REF"
+export BASE VERSION W ROOT REPOS PINS_RULE_FROM CONTENT_REF
 if [[ $VERSION != "$PINS_RULE_FROM" && $(printf '%s\n%s\n' "$VERSION" "$PINS_RULE_FROM" | sort -V | head -1) == "$VERSION" ]]; then
     echo "note  release $VERSION predates ADR-0006 (rule from $PINS_RULE_FROM): the pins are only checked as served, a pin equal to the release is accepted"
 fi
@@ -108,11 +114,11 @@ PY
         have=$(sha256sum "$dir/$tgz" | cut -d' ' -f1)
         if [[ -z $want ]]; then echo "FAIL $r/$c digest no $VERSION entry in the index"; rc=1
         elif [[ $want == "$have" ]]; then echo "ok   $r/$c digest"; else echo "FAIL $r/$c digest index $want != file $have"; rc=1; fi
-        # content against git HEAD
+        # content against the git ref of the release (CONTENT_REF)
         mkdir -p "$dir/x"; tar -xzf "$dir/$tgz" -C "$dir/x"
         for f in README.md values.yaml; do
-            if git show "HEAD:charts/$c/$f" 2>/dev/null | cmp -s - "$dir/x/$c/$f"; then echo "ok   $r/$c content $f"
-            else echo "FAIL $r/$c content $f differs from git HEAD"; rc=1; fi
+            if git show "$CONTENT_REF:charts/$c/$f" 2>/dev/null | cmp -s - "$dir/x/$c/$f"; then echo "ok   $r/$c content $f"
+            else echo "FAIL $r/$c content $f differs from git $CONTENT_REF"; rc=1; fi
         done
     done
     return $rc

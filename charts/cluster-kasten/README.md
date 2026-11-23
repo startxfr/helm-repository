@@ -18,6 +18,20 @@ more information on how to use these resources.
   (see [cluster-trident](https://helm-repository.readthedocs.io/en/latest/charts/cluster-trident))
 - An S3-compatible bucket for the location profiles
 
+## What the chart renders
+
+| Resource                                 | Sync wave |
+| ---------------------------------------- | --------- |
+| Namespace (via `project` sub-chart)      | `-10`     |
+| OperatorGroup (via `operator` sub-chart) | `-6`      |
+| Subscription (via `operator` sub-chart)  | `-5`      |
+| Profile Secret                           | `1`       |
+| K10                                      | `15`      |
+| Profile                                  | `30`      |
+| Policy                                   | `40`      |
+
+`Profile` and `Policy` are rendered as helm hooks by default (`hooked: true`) because their CRD only exists once K10 is running.
+
 ## Deploy this helm chart on openshift
 
 ### 1. Connect to your Openshift cluster
@@ -74,14 +88,14 @@ helm install cluster-kasten startx/cluster-kasten -f https://raw.githubuserconte
 
 Example values files shipped with the chart, to use with `helm install -f <file>` :
 
-- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kasten/values-startx.yaml))
+- **startx** : context `startx/default/infra`; against `values.yaml`: differ on 22 keys, by top-level key: `project` (8), `policies` (4), `profiles` (4), `operator` (3), ... (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kasten/values-startx.yaml))
 - `examples/argocd/` : 5 example manifest(s) (see the ArgoCD or usage sections)
 
 ```bash
 helm install cluster-kasten startx/cluster-kasten -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kasten/values-startx.yaml
 ```
 
-## Values overview
+## Values dictionary
 
 See `values.yaml` for the full list. The most important keys are:
 
@@ -92,20 +106,6 @@ See `values.yaml` for the full list. The most important keys are:
 - `policies.enabled` / `policies.list[*]` : backup policies with optional export to a remote profile.
 - `project.*` : passed to the [project](https://helm-repository.readthedocs.io/en/latest/charts/project) sub-chart.
 - `operator.*` : passed to the [operator](https://helm-repository.readthedocs.io/en/latest/charts/operator) sub-chart (Subscription + OperatorGroup).
-
-## Resources rendered
-
-| Resource                                 | Sync wave |
-| ---------------------------------------- | --------- |
-| Namespace (via `project` sub-chart)      | `-10`     |
-| OperatorGroup (via `operator` sub-chart) | `-6`      |
-| Subscription (via `operator` sub-chart)  | `-5`      |
-| Profile Secret                           | `1`       |
-| K10                                      | `15`      |
-| Profile                                  | `30`      |
-| Policy                                   | `40`      |
-
-`Profile` and `Policy` are rendered as helm hooks by default (`hooked: true`) because their CRD only exists once K10 is running.
 
 ## Deploy with ArgoCD
 

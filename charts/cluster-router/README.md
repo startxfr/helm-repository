@@ -73,6 +73,14 @@ helm install cluster-router startx/cluster-router
 helm install cluster-router startx/cluster-router -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-router/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-router startx/cluster-router -f <file>`) :
+
+- [values-mg.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-router/values-mg.yaml) : same values as `values-startx.yaml`
+- [values-prgmk.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-router/values-prgmk.yaml) : against `values-startx.yaml`: differ on `context.scope` (startx → pragmatik)
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-router/values-startx_noinfra.yaml) : context `startx/default/infra`; same values as `values-startx.yaml`
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -84,8 +92,6 @@ oc apply -k .
 ```
 
 ### Applications
-
-
 
 ## History
 

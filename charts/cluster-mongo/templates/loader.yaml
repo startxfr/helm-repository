@@ -14,8 +14,8 @@ metadata:
   labels:
     {{- include "cluster-mongo.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- $name -}}-loader-pod"
-    postgresql_cluster: "{{- $name -}}"
-    postgresql: "{{- $name -}}"
+    mongo_cluster: "{{- $name -}}"
+    mongo: "{{- $name -}}"
   annotations:
     {{- include "cluster-mongo.annotations" $ | nindent 4 }}
     argocd.argoproj.io/sync-wave: "35"

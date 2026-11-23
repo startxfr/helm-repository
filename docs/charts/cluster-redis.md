@@ -56,6 +56,16 @@ helm install cluster-redis startx/cluster-redis
 helm install cluster-redis startx/cluster-redis -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-redis/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-redis startx/cluster-redis -f <file>`) :
+
+- [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-redis/values-demo.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 5 keys, by top-level key: `cluster` (1), `context` (1), `operator` (1), `project` (1), ...
+- [values-redis-ee.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-redis/values-redis-ee.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 30 keys, by top-level key: `project` (12), `rbac` (9), `operator` (7), `cluster` (2)
+- [values-startx-nsscoped.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-redis/values-startx-nsscoped.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 11 keys, by top-level key: `project` (8), `cluster` (2), `rbac` (1)
+- [values-startx_noinfra-nsscoped.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-redis/values-startx_noinfra-nsscoped.yaml) : context `startx/default/infra`; against `values-startx-nsscoped.yaml`: differ on `project.project.name` (startx-redis → openshift-startx-redis)
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-redis/values-startx_noinfra.yaml) : context `startx/default/infra`; same values as `values-startx.yaml`
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -67,8 +77,6 @@ oc apply -k .
 ```
 
 ### Applications
-
-
 
 ## History
 

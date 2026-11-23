@@ -17,15 +17,15 @@ context: &context
   # Application name (functional tenant, default use Chart name)
   app: unifai
   # Version name of this application (default use Chart appVersion)
-  version: "0.1.77"
+  version: "0.1.78"
 
 # UnifAI operator (cluster-wide : install it once per cluster)
 operator:
   # Install the operator (Deployment, RBAC). Set to false when the operator already runs on
   # the cluster (installed by OLM or by another release of this chart).
   enabled: true
-  # Operator image, pinned by digest to the UnifAI release v0.1.77
-  image: quay.io/zuno/unifai-operator@sha256:5b323ea0a6274f7b81b991e2a6dc2d7e280cc57d0860ed48bd55e78855648148
+  # Operator image, pinned by digest to the UnifAI release v0.1.78
+  image: quay.io/zuno/unifai-operator@sha256:f85a83bb59bf6838e11fbb3cdd6b74e7c103130601b12445f58efb06795eb396
   # Image pull policy of the operator
   imagePullPolicy: IfNotPresent
   # Pull secrets for the operator image (list of {name: ...})
@@ -58,16 +58,16 @@ stack:
     # Sizing profile : dev (small requests, no autoscaling) or prod
     profile: dev
     # Tag of the UnifAI application images
-    version: v0.1.77
+    version: v0.1.78
     # Registry holding the UnifAI application images
     imageRegistry: quay.io/zuno
-    # Application images pinned by digest (UnifAI release v0.1.77, linux/amd64 only)
+    # Application images pinned by digest (UnifAI release v0.1.78, linux/amd64 only)
     images:
-      rag: quay.io/zuno/unifai-rag@sha256:840689b8952493ece736dbba8716a444db4a608aca6de99936e64e6f3c7166a0
-      multiagent: quay.io/zuno/unifai-multiagent@sha256:e6cbb607e8f316eca54bde50f9e1353b660e1cdb8b5a6ec27309e5ac180482cc
-      backend: quay.io/zuno/unifai-backend@sha256:102f0a79a9b504691384ff7ba5d4ae3cff2869f476b4623833d95f131c3de62e
-      identity: quay.io/zuno/unifai-identity@sha256:cc888bd5ab1026935e83f42daf724dec71939d885ef1ae3433acfc05e9f3fd6b
-      ui: quay.io/zuno/unifai-ui@sha256:a3d90d8d0b8cb4b3294402e787fbdb464c4ba8f42c061b4e0f58f705be2cd593
+      rag: quay.io/zuno/unifai-rag@sha256:363150455a193c5488dd9404891e514efb9c4f8860211e4e1c87101c6834979e
+      multiagent: quay.io/zuno/unifai-multiagent@sha256:b36cce4b9d307c20e42be3e0ee099bacd88450d69f1ed01c8fc6fbd60050165f
+      backend: quay.io/zuno/unifai-backend@sha256:8bff8456b6413a67f40e98fee92cef10be4bcfaa954673d8ac79b0c90c260a74
+      identity: quay.io/zuno/unifai-identity@sha256:514d3bf56a1e0191a41f4d3afa897dcbdc0f1b7a2e49caae15273da4ff66b487
+      ui: quay.io/zuno/unifai-ui@sha256:98795392b4d9d043854ed77355793c2f187ab973abfe06ef784af06feae34d79
     # Identity provider. UnifAI always needs a Keycloak realm : either "keycloak" (deployed by
     # the operator, OpenShift only) or "external" (your own Keycloak). Setting "external"
     # replaces the default "keycloak" block.
@@ -86,8 +86,8 @@ stack:
       #     key: client-secret
     # Replica count of the multiagent-be Deployment, 1 to 10 (operator 0.1.77). Not set by default : unset leaves the
     # count and the release unchanged ; setting it, even to 1, upgrades the multiagent-be release once (the pod
-    # count changes, no running pod restarts). dev runs this count, prod raises the autoscaler minimum to it. More than one pod needs a
-    # ReadWriteMany shared storage (sharedClassName below).
+    # count follows it, no running pod restarts). dev runs this count, prod raises the autoscaler minimum to it.
+    # More than one pod needs a ReadWriteMany shared storage (sharedClassName below).
     # replicas:
     #   multiagent: 2
     # Storage classes ; empty means the cluster default class

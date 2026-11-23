@@ -84,7 +84,7 @@ helm install cluster-crunchy-instance startx/cluster-crunchy --set project.enabl
 helm install cluster-crunchy startx/cluster-crunchy -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-crunchy/values-startx.yaml
 ```
 
-## Values
+## Values dictionary
 
 ### Cluster entries (`cluster.list[]`)
 

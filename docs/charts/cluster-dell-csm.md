@@ -100,66 +100,13 @@ helm install cluster-dell-csm startx/cluster-dell-csm -f https://raw.githubuserc
 
 Example values files shipped with the chart, to use with `helm install -f <file>` :
 
-- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dell-csm/values-startx.yaml))
-- **startx_noinfra** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dell-csm/values-startx_noinfra.yaml))
+- **startx** : context `startx/default/infra`; against `values.yaml`: differ on 23 keys, by top-level key: `project` (6), `operator` (5), `context` (4), `csm` (4), ... (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dell-csm/values-startx.yaml))
+- **startx_noinfra** : context `startx/default/infra`; against `values-startx.yaml`: differ on `csm.controller.infra_enabled` (true → false), `csm.node.infra_enabled` (true → false), `operator.subscription.operator.config.infra` (true → false) (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dell-csm/values-startx_noinfra.yaml))
 - `examples/argocd/` : 5 example manifest(s) (see the ArgoCD or usage sections)
 
 ```bash
 helm install cluster-dell-csm startx/cluster-dell-csm -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dell-csm/values-startx.yaml
 ```
-
-## Deploy with ArgoCD
-
-### Deploy via ArgoCD Application
-
-Deploy `cluster-dell-csm` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject:
-
-```bash
-git clone https://gitlab.com/startx1/helm.git
-cd helm-repository/charts/cluster-dell-csm/examples/argocd/
-oc apply -k .
-```
-
-| Application                 | Wave   | Enabled flags                                                                      | Destination           |
-| --------------------------- | ------ | ---------------------------------------------------------------------------------- | --------------------- |
-| `cluster-dell-csm-project`  | `"1"`  | `project.enabled: true`, all others `false`                                        | `default-dell-csm`    |
-| `cluster-dell-csm-operator` | `"5"`  | `operator.enabled: true` (`operatorGroup.enabled: false`), all others `false`      | `openshift-operators` |
-| `cluster-dell-csm-app`      | `"10"` | `csm`, `storageClasses` and `volumeSnapshotClasses` enabled, all others `false`    | `default-dell-csm`    |
-
-The array credentials are not part of the example: enable `arraySecret` in the `cluster-dell-csm-app` Application with
-your own `arraySecret.config` or `arraySecret.externalSecret`, or create the `powerstore-config` Secret outside of ArgoCD.
-The `ignoreDifferences` of the `-app` Application covers the finalizer and the `storage.dell.com/*` annotations added by
-the operator on the `ContainerStorageModule`; add `.spec.version` to it when `csm.extraSpec.upgrade: auto` is used because
-the operator then rewrites the CSM version itself.
-
-The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
-
-## External secrets
-
-The array credentials (`arraySecret`) can come from an external store (Vault, AWS Secrets Manager...)
-through the [External Secrets Operator](https://external-secrets.io) instead of the chart values.
-With `arraySecret.externalSecret.enabled: true`, the chart renders an `ExternalSecret` producing the
-Secret `<csm.name>-config` in the driver namespace with the `config` key, so the driver configuration is
-unchanged. Without `externalSecret`, the chart keeps rendering the Secret from `arraySecret.config`.
-
-```yaml
-externalSecretDefaults:
-  secretStoreRef:
-    name: vault-backend
-    kind: ClusterSecretStore
-arraySecret:
-  enabled: true
-  externalSecret:
-    enabled: true
-    remoteRefs:
-      config:
-        key: ocp/storage/powerstore
-        property: config
-```
-
-An `externalSecret` block accepts `secretStoreRef` and `refreshInterval` (defaults: `externalSecretDefaults`),
-`remoteRefs` (map of secret key to ESO `remoteRef`) and the raw ESO fields `data`, `dataFrom` and `template`.
-Rendering fails when no store is set or when the `config` key is not provided.
 
 ## Values dictionary
 
@@ -275,6 +222,59 @@ Rendering fails when no store is set or when the `config` key is not provided.
 | operator.subscription.operator.source.name       | `certified-operators`         | Catalog source of the operator                             |
 | operator.subscription.operator.config.infra      | `false`                       | Run the operator on infra nodes                            |
 | operator.operatorGroup.enabled                   | `false`                       | Disabled: `openshift-operators` already has a global OperatorGroup |
+
+## Deploy with ArgoCD
+
+### Deploy via ArgoCD Application
+
+Deploy `cluster-dell-csm` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject:
+
+```bash
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-dell-csm/examples/argocd/
+oc apply -k .
+```
+
+| Application                 | Wave   | Enabled flags                                                                      | Destination           |
+| --------------------------- | ------ | ---------------------------------------------------------------------------------- | --------------------- |
+| `cluster-dell-csm-project`  | `"1"`  | `project.enabled: true`, all others `false`                                        | `default-dell-csm`    |
+| `cluster-dell-csm-operator` | `"5"`  | `operator.enabled: true` (`operatorGroup.enabled: false`), all others `false`      | `openshift-operators` |
+| `cluster-dell-csm-app`      | `"10"` | `csm`, `storageClasses` and `volumeSnapshotClasses` enabled, all others `false`    | `default-dell-csm`    |
+
+The array credentials are not part of the example: enable `arraySecret` in the `cluster-dell-csm-app` Application with
+your own `arraySecret.config` or `arraySecret.externalSecret`, or create the `powerstore-config` Secret outside of ArgoCD.
+The `ignoreDifferences` of the `-app` Application covers the finalizer and the `storage.dell.com/*` annotations added by
+the operator on the `ContainerStorageModule`; add `.spec.version` to it when `csm.extraSpec.upgrade: auto` is used because
+the operator then rewrites the CSM version itself.
+
+The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
+
+## External secrets
+
+The array credentials (`arraySecret`) can come from an external store (Vault, AWS Secrets Manager...)
+through the [External Secrets Operator](https://external-secrets.io) instead of the chart values.
+With `arraySecret.externalSecret.enabled: true`, the chart renders an `ExternalSecret` producing the
+Secret `<csm.name>-config` in the driver namespace with the `config` key, so the driver configuration is
+unchanged. Without `externalSecret`, the chart keeps rendering the Secret from `arraySecret.config`.
+
+```yaml
+externalSecretDefaults:
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+arraySecret:
+  enabled: true
+  externalSecret:
+    enabled: true
+    remoteRefs:
+      config:
+        key: ocp/storage/powerstore
+        property: config
+```
+
+An `externalSecret` block accepts `secretStoreRef` and `refreshInterval` (defaults: `externalSecretDefaults`),
+`remoteRefs` (map of secret key to ESO `remoteRef`) and the raw ESO fields `data`, `dataFrom` and `template`.
+Rendering fails when no store is set or when the `config` key is not provided.
 
 ## History
 

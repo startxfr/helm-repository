@@ -63,7 +63,7 @@ spec:
       name: "{{ $name }}-config"
   credentials: "{{ $name }}-credentials"
   members: {{ .replicas | default 3 }}
-  persistent: {{ .isPersistent | default true }}
+  persistent: {{ if kindIs "bool" .isPersistent }}{{ .isPersistent }}{{ else }}{{ .isPersistent | default true }}{{ end }}
   type: ReplicaSet
   version: {{ .version | default "4.4.0-ent" | quote }}
 {{- end -}}{{- end -}}

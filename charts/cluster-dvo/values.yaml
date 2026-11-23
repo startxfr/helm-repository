@@ -15,13 +15,15 @@ context:  &context
   # Version name of this application (default use Chart appVersion)
   version: "0.7.14"
 
-# Configure the grafana stack
-grafana:
+# Configure the grafana stack. The keys graphana, graphanaProject and graphanaOperator are the aliases of the dependencies
+# declared in Chart.yaml (the spelling is kept for compatibility): their values reach the project and operator sub-charts.
+# The old spellings grafana (enabled, name) and grafanaProject (project.name) are still read by the template: when a user file sets them they win.
+graphana:
   # Enable the deployment of the grafana
   enabled: false
   # Name of the deployed instance of grafana (default is deployment-validation)
-  name: deployment-validation
-grafanaProject: 
+  # name: deployment-validation
+graphanaProject:
   enabled: false
   context: 
     <<: *context
@@ -34,7 +36,7 @@ grafanaProject:
     description: DVO monitoring configured by STARTX
     additionalLabels: |-
       openshift.io/cluster-monitoring: "true"
-grafanaOperator:
+graphanaOperator:
   enabled: false
   context: 
     <<: *context

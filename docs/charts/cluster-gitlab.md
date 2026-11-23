@@ -56,6 +56,12 @@ helm install cluster-gitlab startx/cluster-gitlab
 helm install cluster-gitlab startx/cluster-gitlab -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gitlab/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-gitlab startx/cluster-gitlab -f <file>`) :
+
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gitlab/values-startx_noinfra.yaml) : context `startx/default/infra`; same values as `values-startx.yaml`
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -67,8 +73,6 @@ oc apply -k .
 ```
 
 ### Applications
-
-
 
 ## History
 

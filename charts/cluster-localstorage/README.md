@@ -60,6 +60,13 @@ helm install cluster-localstorage startx/cluster-localstorage
 helm install cluster-localstorage startx/cluster-localstorage -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-localstorage/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-localstorage startx/cluster-localstorage -f <file>`) :
+
+- [values-mg.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-localstorage/values-mg.yaml) : against `values-startx.yaml`: differ on 6 keys, by top-level key: `localstorage` (2), `project` (2), `localstorageset` (1), `operator` (1)
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-localstorage/values-startx_noinfra.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on `operator.subscription.operator.config.infra` (true → false)
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -71,8 +78,6 @@ oc apply -k .
 ```
 
 ### Applications
-
-
 
 ## History
 

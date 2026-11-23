@@ -56,6 +56,13 @@ helm install cluster-ptp startx/cluster-ptp
 helm install cluster-ptp startx/cluster-ptp -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ptp/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-ptp startx/cluster-ptp -f <file>`) :
+
+- [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ptp/values-demo.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 22 keys, by top-level key: `operator` (17), `project` (4), `context` (1)
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ptp/values-startx_noinfra.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on `operator.subscription.operator.config.infra` (true → false), `ptp.spec`
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -67,8 +74,6 @@ oc apply -k .
 ```
 
 ### Applications
-
-
 
 ## History
 

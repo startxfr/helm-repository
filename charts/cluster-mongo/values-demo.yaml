@@ -40,7 +40,7 @@ project:
     enabled: true
     hooked: false
     type: namespace
-    name: "startx-mongo"
+    name: "default-mongo"
     display_name: "Demo MongoDB"
     requester: startx
     description: Demo MongoDB configured by STARTX
@@ -53,14 +53,14 @@ operator:
   subscription:
     enabled: true
     hooked: false
-    name: "mongo-postgres-operator"
-    namespace: "startx-mongo"
+    name: "mongodb-enterprise"
+    namespace: "default-mongo"
     version: "v1.33.0"
     operator: 
-      channel: v5
-      name: mongo-postgres-operator
+      channel: stable
+      name: mongodb-enterprise
       installPlanApproval: Manual
-      csv: postgresoperator
+      # csv: mongodb-enterprise
       source: 
         name: certified-operators
         namespace: openshift-marketplace
@@ -68,6 +68,6 @@ operator:
     enabled: true
     hooked: false
     name: "mongo-operator"
-    namespace: "startx-mongo"
-    providedAPIs: "PostgresCluster.v1beta1.postgres-operator.mongodata.com"
+    namespace: "default-mongo"
+    providedAPIs: "MongoDB.v1.mongodb.com,MongoDBMultiCluster.v1.mongodb.com,MongoDBOpsManager.v1.mongodb.com,MongoDBUser.v1.mongodb.com"
 

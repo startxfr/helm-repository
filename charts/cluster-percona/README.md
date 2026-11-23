@@ -172,7 +172,7 @@ helm install cluster-percona-instance startx/cluster-percona --set project.enabl
 helm install cluster-percona startx/cluster-percona -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-percona/values-startx.yaml
 ```
 
-## Values
+## Values dictionary
 
 ### Chart level
 

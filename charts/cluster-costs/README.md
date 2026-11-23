@@ -65,6 +65,13 @@ helm install cluster-costs-instance startx/cluster-costs --set project.enabled=f
 helm install cluster-costs startx/cluster-costs -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-costs/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-costs startx/cluster-costs -f <file>`) :
+
+- [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-costs/values-demo.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 14 keys, by top-level key: `project` (5), `operator` (3), `context` (2), `projectOperator` (2), `CostManagementMetricsConfig` (1), `sxcollector` (1)
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-costs/values-startx_noinfra.yaml) : context `startx/default/infra`; same values as `values-startx.yaml`
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -76,8 +83,6 @@ oc apply -k .
 ```
 
 ### Applications
-
-
 
 ## History
 

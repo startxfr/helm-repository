@@ -174,8 +174,8 @@ metadata:
     {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "hugo-deploymentconfig"
     app.openshift.io/runtime: nodejs
-        kube-monkey/enabled: enabled
-        kube-monkey/identifier: {{ include "startx.appName" $ | default "cluster" | quote }}
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $ | default "cluster" | quote }}
 spec:
   replicas: 2
   strategy:

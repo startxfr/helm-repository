@@ -10,7 +10,7 @@ This chart installs two things :
   web interface, backend, multi-agent engine, RAG services, identity service, and their datastores (MongoDB,
   Qdrant, RabbitMQ, Redis, Temporal).
 
-It deploys UnifAI release **v0.1.77** ; every UnifAI image is pinned by digest.
+It deploys UnifAI release **v0.1.78** ; every UnifAI image is pinned by digest.
 
 ## Requirements
 
@@ -137,7 +137,7 @@ spec:
   source:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.414
+    targetRevision: 21.3.415
     helm:
       values: |
         stack:
@@ -168,7 +168,7 @@ spec:
   source:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.414
+    targetRevision: 21.3.415
     helm:
       # The definitions belong to the operator Application
       skipCrds: true
@@ -238,7 +238,7 @@ The settings most installs need :
 | Key                               | Default            | Description                                                                    |
 | --------------------------------- | ------------------ | ------------------------------------------------------------------------------ |
 | `profile`                         | `dev`              | `dev` (small requests, no autoscaling) or `prod`                               |
-| `version`, `images`               | v0.1.77, digests   | UnifAI images ; change them together when upgrading                            |
+| `version`, `images`               | v0.1.78, digests   | UnifAI images ; change them together when upgrading                            |
 | `identity.adminUsers`             | `[admin]`          | Keycloak users granted the administrator role                                  |
 | `identity.keycloak`               | `{}`               | Keycloak deployed by the operator (OpenShift only)                             |
 | `identity.external`               | not set            | your own Keycloak ; replaces `identity.keycloak`                               |
@@ -324,7 +324,7 @@ stack:
 
 `stack.spec.replicas.multiagent` sets the number of `multiagent-be` pods (the multiagent API and SSE Deployment, not its
 Temporal worker), from 1 to 10. It is the only key accepted for now. The chart does not set it : unset, the count stays
-1 and nothing changes. Setting it, even to `1`, upgrades the multiagent-be release once: the pod count changes and no running pod restarts. The
+1 and nothing changes. Setting it, even to `1`, upgrades the multiagent-be release once: the pod count follows it and no running pod restarts. The
 `dev` profile has no autoscaler and runs exactly that count ; `prod` raises the autoscaler minimum to it (and the
 maximum when it is lower). More than one pod needs a ReadWriteMany shared storage (`stack.spec.storage.sharedClassName`).
 Reference : `fork/unifai-operator/README.md` of the UnifAI sources (R-570).
@@ -402,3 +402,4 @@ kubectl -n unifai logs deploy/unifai-operator-controller-manager
 | 21.3.412 | 2026-11-22 | full repository release: internal pins on the previous published version (ADR-0006) |
 | 21.3.413 | 2026-11-22 | update: UnifAI v0.1.77 (operator image pinned by digest), optional stack.spec.replicas.multiagent, UnifaiStack CRD change |
 | 21.3.414 | 2026-11-22 | README: setting stack.spec.replicas upgrades the multiagent-be release without restarting a running pod |
+| 21.3.415 | 2026-11-23 | UnifAI v0.1.78 (images pinned by digest), no CRD, RBAC or default change |

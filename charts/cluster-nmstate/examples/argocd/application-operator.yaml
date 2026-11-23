@@ -16,8 +16,10 @@ spec:
     chart: cluster-nmstate
     helm:
       valueFiles:
-        - values-startx_noinfra.yaml
+        - values-startx.yaml
       values: |
+        nmstate:
+          enabled: false
         operator:
           enabled: true
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable

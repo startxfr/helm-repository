@@ -115,59 +115,13 @@ helm install cluster-loki startx/cluster-loki -f https://raw.githubusercontent.c
 
 Example values files shipped with the chart, to use with `helm install -f <file>` :
 
-- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-loki/values-startx.yaml))
-- **startx_noinfra** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-loki/values-startx_noinfra.yaml))
+- **startx** : context `startx/default/infra`; against `values.yaml`: differ on 17 keys, by top-level key: `project` (6), `operator` (5), `context` (4), `lokistack` (1), ... (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-loki/values-startx.yaml))
+- **startx_noinfra** : context `startx/default/infra`; against `values-startx.yaml`: differ on `lokistack.infra_enabled` (true → false), `operator.subscription.operator.config.infra` (true → false) (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-loki/values-startx_noinfra.yaml))
 - `examples/argocd/` : 5 example manifest(s) (see the ArgoCD or usage sections)
 
 ```bash
 helm install cluster-loki startx/cluster-loki -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-loki/values-startx.yaml
 ```
-
-## Deploy with ArgoCD
-
-### Deploy via ArgoCD Application
-
-Deploy `cluster-loki` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject:
-
-```bash
-git clone https://gitlab.com/startx1/helm.git
-cd helm-repository/charts/cluster-loki/examples/argocd/
-oc apply -k .
-```
-
-| Application             | Wave   | Concern                                                        | Destination                  |
-| ----------------------- | ------ | -------------------------------------------------------------- | ---------------------------- |
-| `cluster-loki-project`  | `"1"`  | `project.enabled: true` (namespace `openshift-logging`)        | `openshift-logging`          |
-| `cluster-loki-operator` | `"5"`  | `operator.enabled: true` (Loki operator subscription)          | `openshift-operators-redhat` |
-| `cluster-loki-app`      | `"10"` | `lokistack.enabled: true` (LokiStack CR)                       | `openshift-logging`          |
-
-The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state. The `cluster-loki-app` Application ignores the `/metadata/finalizers` added by the operator on the LokiStack. The object storage secret is not part of the examples: add `storageSecret.enabled: true` with your values (or an ExternalSecret) to the `cluster-loki-app` Application, or create it by hand before the sync.
-
-## External secrets
-
-The object storage secret (`storageSecret`) can come from an external store (Vault, AWS Secrets Manager...) through
-the [External Secrets Operator](https://external-secrets.io) instead of the chart values. With
-`storageSecret.externalSecret.enabled: true`, the chart renders an `ExternalSecret` producing the Secret
-`lokistack.storage.secret.name` in the LokiStack namespace, with the keys of your choice, so the LokiStack
-referencing it is unchanged. Without `externalSecret`, the chart keeps rendering the Secret from `storageSecret.data`.
-
-```yaml
-externalSecretDefaults:
-  secretStoreRef:
-    name: vault-backend
-    kind: ClusterSecretStore
-storageSecret:
-  enabled: true
-  externalSecret:
-    enabled: true
-    dataFrom:
-      - extract:
-          key: ocp/logging/loki-s3
-```
-
-An `externalSecret` block accepts `secretStoreRef` and `refreshInterval` (defaults: `externalSecretDefaults`),
-`remoteRefs` (map of secret key to ESO `remoteRef`) and the raw ESO fields `data`, `dataFrom` and `template`.
-Rendering fails when no store is set or when no key source is provided.
 
 ## Values dictionary
 
@@ -291,6 +245,52 @@ See the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/
 | operator.operatorGroup.providedAPIs              | `AlertingRule...RulerConfig` | APIs provided by the operator                                               |
 
 See the [operator chart](https://helm-repository.readthedocs.io/en/latest/charts/operator) for the other keys.
+
+## Deploy with ArgoCD
+
+### Deploy via ArgoCD Application
+
+Deploy `cluster-loki` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject:
+
+```bash
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-loki/examples/argocd/
+oc apply -k .
+```
+
+| Application             | Wave   | Concern                                                        | Destination                  |
+| ----------------------- | ------ | -------------------------------------------------------------- | ---------------------------- |
+| `cluster-loki-project`  | `"1"`  | `project.enabled: true` (namespace `openshift-logging`)        | `openshift-logging`          |
+| `cluster-loki-operator` | `"5"`  | `operator.enabled: true` (Loki operator subscription)          | `openshift-operators-redhat` |
+| `cluster-loki-app`      | `"10"` | `lokistack.enabled: true` (LokiStack CR)                       | `openshift-logging`          |
+
+The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state. The `cluster-loki-app` Application ignores the `/metadata/finalizers` added by the operator on the LokiStack. The object storage secret is not part of the examples: add `storageSecret.enabled: true` with your values (or an ExternalSecret) to the `cluster-loki-app` Application, or create it by hand before the sync.
+
+## External secrets
+
+The object storage secret (`storageSecret`) can come from an external store (Vault, AWS Secrets Manager...) through
+the [External Secrets Operator](https://external-secrets.io) instead of the chart values. With
+`storageSecret.externalSecret.enabled: true`, the chart renders an `ExternalSecret` producing the Secret
+`lokistack.storage.secret.name` in the LokiStack namespace, with the keys of your choice, so the LokiStack
+referencing it is unchanged. Without `externalSecret`, the chart keeps rendering the Secret from `storageSecret.data`.
+
+```yaml
+externalSecretDefaults:
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+storageSecret:
+  enabled: true
+  externalSecret:
+    enabled: true
+    dataFrom:
+      - extract:
+          key: ocp/logging/loki-s3
+```
+
+An `externalSecret` block accepts `secretStoreRef` and `refreshInterval` (defaults: `externalSecretDefaults`),
+`remoteRefs` (map of secret key to ESO `remoteRef`) and the raw ESO fields `data`, `dataFrom` and `template`.
+Rendering fails when no store is set or when no key source is provided.
 
 ## History
 

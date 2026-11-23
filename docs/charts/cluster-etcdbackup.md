@@ -16,6 +16,23 @@ more information on how to use these resources.
 - An S3-compatible bucket and an access key / secret key pair with write access
 - The backup pods run on a control-plane node with the `privileged` SCC (granted by the chart)
 
+## What the chart renders
+
+| Resource                                     | Sync wave | Purpose                                         |
+| -------------------------------------------- | --------- | ----------------------------------------------- |
+| `Namespace` (via `project` sub-chart)        | `-10`     | Namespace `etcd-backup`                         |
+| `ServiceAccount/etcd-backup`                 | `1`       | Identity for the backup pods                    |
+| `Role/use-privileged-scc`                    | `1`       | Allow `use` on the `privileged` SCC             |
+| `RoleBinding/etcd-backup-sa-privileged`      | `1`       | Bind SA to Role                                 |
+| `ConfigMap/backup-config`                    | `1`       | Non-sensitive S3 settings                       |
+| `Secret/etcd-backup-s3`                      | `1`       | Sensitive S3 access/secret keys                 |
+| `ConfigMap/s3-ca` (optional)                 | `1`       | Custom CA bundle when `useS3Ca: true`           |
+| `CronJob/etcd-backup`                        | `15`      | The backup job itself                           |
+| `PrometheusRule/etcd-backup-cronjob-monitor` | `30`      | "No recent backup" + "Last job failed" alerts   |
+
+S3 credentials can either be rendered by the chart (fill `etcdBackup.s3_secret.s3_access_key` and `s3_secret_key`)
+or referenced from an existing secret (set `etcdBackup.s3_secret.secretName`, with keys `OCP_BACKUP_S3_ACCESS_KEY` and `OCP_BACKUP_S3_SECRET_KEY`).
+
 ## Deploy this helm chart on openshift
 
 ### 1. Connect to your Openshift cluster
@@ -67,29 +84,12 @@ helm install cluster-etcdbackup startx/cluster-etcdbackup -f https://raw.githubu
 
 Example values files shipped with the chart, to use with `helm install -f <file>` :
 
-- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-etcdbackup/values-startx.yaml))
+- **startx** : context `startx/default/infra`; against `values.yaml`: differ on 11 keys, by top-level key: `project` (6), `etcdBackup` (3), `context` (2) (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-etcdbackup/values-startx.yaml))
 - `examples/argocd/` : 4 example manifest(s) (see the ArgoCD or usage sections)
 
 ```bash
 helm install cluster-etcdbackup startx/cluster-etcdbackup -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-etcdbackup/values-startx.yaml
 ```
-
-## Resources rendered
-
-| Resource                                     | Sync wave | Purpose                                         |
-| -------------------------------------------- | --------- | ----------------------------------------------- |
-| `Namespace` (via `project` sub-chart)        | `-10`     | Namespace `etcd-backup`                         |
-| `ServiceAccount/etcd-backup`                 | `1`       | Identity for the backup pods                    |
-| `Role/use-privileged-scc`                    | `1`       | Allow `use` on the `privileged` SCC             |
-| `RoleBinding/etcd-backup-sa-privileged`      | `1`       | Bind SA to Role                                 |
-| `ConfigMap/backup-config`                    | `1`       | Non-sensitive S3 settings                       |
-| `Secret/etcd-backup-s3`                      | `1`       | Sensitive S3 access/secret keys                 |
-| `ConfigMap/s3-ca` (optional)                 | `1`       | Custom CA bundle when `useS3Ca: true`           |
-| `CronJob/etcd-backup`                        | `15`      | The backup job itself                           |
-| `PrometheusRule/etcd-backup-cronjob-monitor` | `30`      | "No recent backup" + "Last job failed" alerts   |
-
-S3 credentials can either be rendered by the chart (fill `etcdBackup.s3_secret.s3_access_key` and `s3_secret_key`)
-or referenced from an existing secret (set `etcdBackup.s3_secret.secretName`, with keys `OCP_BACKUP_S3_ACCESS_KEY` and `OCP_BACKUP_S3_SECRET_KEY`).
 
 ## Trigger a backup manually
 

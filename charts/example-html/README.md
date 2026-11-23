@@ -51,30 +51,13 @@ Complete deployment of an html application with the following characteristics :
 helm install example-html startx/example-html
 ```
 
-### Development values file (values-demo-hpa.yaml)
-
-Complete deployment of a html demo application for stress test (used in HPA test) with the following characteristics :
-
-- 1 **service** named **hpa-app** load balancing to pod deployed
-- 1 **deployment** named **hpa-app** deploying **2 pod** from version **alpine3** html image running with debug disabled
-- 2 **configMap** holding html configuration and pod environment variable context
-
-```bash
-# base configuration running tekton v1.0.1 configuration
-helm install example-html startx/example-html -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-hpa.yaml
-```
-
 ### Other values files
 
-- **demo-3scale-manpage** : [values-demo-3scale-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-3scale-manpage.yaml)
-- **demo-aap-manpage** : [values-demo-aap-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-aap-manpage.yaml)
-- **demo-affinity-manpage** : [values-demo-affinity-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-affinity-manpage.yaml)
-- **demo-argocd-manpage** : [values-demo-argocd-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-argocd-manpage.yaml)
-- **demo-automation-runner-manpage** : [values-demo-automation-runner-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-automation-runner-manpage.yaml)
-- **demo-chaos-manpage** : [values-demo-chaos-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-chaos-manpage.yaml)
-- **demo-compliance-manpage** : [values-demo-compliance-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-compliance-manpage.yaml)
-- **demo-costs-manpage** : [values-demo-costs-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-costs-manpage.yaml)
+- **demo manpages** : the 36 files matching `values-demo-*-manpage.yaml` (for example [values-demo-3scale-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-3scale-manpage.yaml)) deploy the HTML manual page of one startx demo (`values-demo-hpa-manpage.yaml` is the one of the HPA demo). Each one sets the namespace, exposes the service (`html.expose.enabled: true`) and holds the page in `html.data` (`index.html`). 32 files use the namespace `demo-<name>` of the file; 4 use `startx-<name>` (chaos, couchbase, crunchy, kafka).
+
+```bash
 helm install example-html startx/example-html -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-3scale-manpage.yaml
+```
 
 ## Values dictionary
 
@@ -135,7 +118,6 @@ spec:
     syncOptions:
       - CreateNamespace=true
 ```
-
 
 ## History
 

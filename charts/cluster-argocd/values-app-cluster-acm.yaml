@@ -47,7 +47,7 @@ application:
         targetRevision: stable
       helm: |
         valueFiles:
-          - values-startx_noinfra.yaml
+          - values-startx_noinfra-acm.yaml
         values: |
           acm:
             enabled: true
@@ -82,12 +82,14 @@ application:
         targetRevision: stable
       helm: |
         valueFiles:
-          - values-startx_noinfra.yaml
+          - values-startx_noinfra-acm.yaml
         values: |
           acm:
             enabled: false
           operator:
             enabled: true
+            subscription:
+              enabled: true
           import:
             enabled: false
           create:
@@ -115,12 +117,14 @@ application:
         targetRevision: stable
       helm: |
         valueFiles:
-          - values-startx_noinfra.yaml
+          - values-startx_noinfra-acm.yaml
         values: |
           acm:
             enabled: false
           project:
             enabled: true
+            project:
+              enabled: true
           import:
             enabled: false
           create:

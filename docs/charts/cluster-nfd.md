@@ -65,9 +65,9 @@ helm install cluster-nfd startx/cluster-nfd -f https://raw.githubusercontent.com
 
 Example values files shipped with the chart, to use with `helm install -f <file>` :
 
-- **mg** : STARTX cluster configuration, see values.yaml for the parameters (see [values-mg.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nfd/values-mg.yaml))
-- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nfd/values-startx.yaml))
-- **startx_noinfra** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nfd/values-startx_noinfra.yaml))
+- **mg** : against `values-startx.yaml`: differ on 4 keys, by top-level key: `project` (2), `nfd` (1), `operator` (1) (see [values-mg.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nfd/values-mg.yaml))
+- **startx** : context `startx/default/infra`; against `values.yaml`: differ on 17 keys, by top-level key: `project` (6), `operator` (5), `context` (4), `nfd` (1), ... (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nfd/values-startx.yaml))
+- **startx_noinfra** : context `startx/default/infra`; against `values-startx.yaml`: differ on `operator.subscription.operator.config.infra` (true → false) (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nfd/values-startx_noinfra.yaml))
 - `examples/argocd/` : 5 example manifest(s) (see the ArgoCD or usage sections)
 
 ```bash

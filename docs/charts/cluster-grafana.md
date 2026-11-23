@@ -89,7 +89,7 @@ helm install cluster-grafana-instance startx/cluster-grafana -f https://raw.gith
 helm install cluster-grafana startx/cluster-grafana -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-grafana/values-startx.yaml
 ```
 
-## Values
+## Values dictionary
 
 ### Chart level
 

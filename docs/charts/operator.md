@@ -108,6 +108,17 @@ helm install operator-3scale startx/operator -f https://raw.githubusercontent.co
 - **crw-2.11.0** : [values-crw-2.11.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crw-2.11.0.yaml)
 helm install operator startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-3scale-0.12.13.yaml
 
+- [values-crw-2.12.101.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crw-2.12.101.yaml) : context `startx/default/infra`; against `values.yaml`: differ on 14 keys, by top-level key: `context` (5), `subscription` (4), `consolePlugin` (3), `operatorGroup` (2)
+- [values-crw-2.13.100.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crw-2.13.100.yaml) : context `startx/default/infra`; against `values.yaml`: differ on 15 keys, by top-level key: `context` (5), `subscription` (4), `consolePlugin` (3), `operatorGroup` (3)
+- [values-crw-3.7.2.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crw-3.7.2.yaml) : context `startx/default/dev`; against `values.yaml`: differ on 16 keys, by top-level key: `context` (5), `subscription` (5), `consolePlugin` (3), `operatorGroup` (3)
+- [values-devspaces-3.1.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-devspaces-3.1.0.yaml) : context `startx/default/infra`; against `values.yaml`: differ on 17 keys, by top-level key: `context` (5), `subscription` (5), `operatorGroup` (4), `consolePlugin` (3)
+- [values-devspaces-3.4.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-devspaces-3.4.0.yaml) : context `startx/default/infra`; against `values.yaml`: differ on 17 keys, by top-level key: `context` (5), `subscription` (5), `operatorGroup` (4), `consolePlugin` (3)
+- [values-devworkspaces-0.33.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-devworkspaces-0.33.0.yaml) : context `startx/default/infra`; against `values.yaml`: differ on 19 keys, by top-level key: `subscription` (8), `context` (5), `consolePlugin` (3), `operatorGroup` (3)
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-startx_noinfra.yaml) : context `startx/default/demo`; against `values.yaml`: differ on 14 keys, by top-level key: `context` (4), `operatorGroup` (4), `subscription` (4), `consolePlugin` (2)
+- [values-tekton-1.13.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-tekton-1.13.0.yaml) : context `startx/default/dev`; against `values.yaml`: differ on 19 keys, by top-level key: `subscription` (6), `context` (5), `operatorGroup` (5), `consolePlugin` (3)
+- [values-tekton-1.18.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-tekton-1.18.0.yaml) : context `startx/default/dev`; against `values.yaml`: differ on 18 keys, by top-level key: `subscription` (6), `context` (5), `operatorGroup` (4), `consolePlugin` (3)
+- [values-tekton-1.8.2.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-tekton-1.8.2.yaml) : context `startx/default/dev`; against `values.yaml`: differ on 19 keys, by top-level key: `subscription` (6), `context` (5), `operatorGroup` (5), `consolePlugin` (3)
+
 ## Values dictionary
 
 ### context values dictionary

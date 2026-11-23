@@ -242,6 +242,26 @@ kraken:
 helm install my-chaos startx/chaos -f my-chaos-minimal-values.yaml
 ```
 
+## Deploy with ArgoCD
+
+The `chaos` umbrella is deployed by ArgoCD as one AppProject (`chaos`) and 6 Applications, one for each tool: `chaos-cerberus-instance`, `chaos-kraken-instance`, `chaos-litmus-instance`, `chaos-mesh-instance`, `chaos-monkey-instance`, `chaos-pipeline-instance`. Each Application installs the
+chart of its tool in its own namespace (`chaos-cerberus`, `chaos-kraken`, `chaos-pipeline`, `chaos-litmus`, `chaos-mesh`, `chaos-monkey`) and creates that namespace itself (`project.enabled: true`), so there is no separate project wave.
+The files are in [`examples/argocd/`](https://github.com/startxfr/helm-repository/tree/master/charts/chaos/examples/argocd).
+
+```bash
+git clone https://github.com/startxfr/helm-repository.git
+cd helm-repository/charts/chaos
+oc apply -k examples/argocd/
+```
+
+- **Sync policy** : `chaos-kraken-instance` has **no automated sync**, every sync of it starts a chaos run; the 5 other Applications sync automatically (`prune`, `selfHeal`).
+- **Finalizer** : every Application carries `resources-finalizer.argocd.argoproj.io`; delete the Applications before the AppProject.
+- **Order** : the examples set no sync wave. `chaos-kraken-instance` and `chaos-pipeline-instance` point at the cerberus service of `chaos-cerberus`, so sync `chaos-cerberus-instance` first.
+- **chaos-mesh** : its Application uses `ServerSideApply=true` and `ignoreDifferences` on the generated certificates and webhook `caBundle` fields (see the `chaos-mesh` README).
+- **Version** : `targetRevision: 21.3.x` follows the minor release; pin an exact version in production (ADR-0004).
+- **cluster-argocd** : `values-app-chaos.yaml` of the `cluster-argocd` chart deploys the same six tools from the git repository (AppProject `chaos-all`, sync wave 50, and 54 for `chaos-pipeline`).
+- **AppProject** : 7 destination namespaces (`chaos-cerberus`, `chaos-kraken`, `chaos-pipeline`, `chaos-litmus`, `chaos-mesh`, `chaos-monkey`, `default`) and the cluster resources the tools need (namespaces, SCC, cluster roles, CRDs, chaos-mesh webhooks).
+
 ## History
 
 | Release   | Date       | Description                                                                                                             |

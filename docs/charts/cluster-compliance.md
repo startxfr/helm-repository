@@ -63,6 +63,12 @@ helm install cluster-compliance-instance startx/cluster-compliance --set project
 helm install cluster-compliance startx/cluster-compliance -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-compliance/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-compliance startx/cluster-compliance -f <file>`) :
+
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-compliance/values-startx_noinfra.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on `operator.subscription.operator.config.infra` (true → false)
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -74,8 +80,6 @@ oc apply -k .
 ```
 
 ### Applications
-
-
 
 ## History
 

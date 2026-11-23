@@ -10,6 +10,15 @@ app.startx.fr/component: {{ include "startx.appComponent" . | default "mycompone
 app.startx.fr/app: {{ include "startx.appName" . | default "myapp" | quote }}
 {{- end -}}
 
+{{/* Extra labels or annotations of a resource: a multi-line string (historical form) or a map, rendered as YAML lines */}}
+{{- define "project.extra" -}}
+{{- if kindIs "string" . -}}
+{{- . | trim -}}
+{{- else -}}
+{{- toYaml . | trim -}}
+{{- end -}}
+{{- end -}}
+
 {{/* Common project annotations */}}
 {{- define "project.annotations" -}}
 {{- include "startx.annotationsCommon" . -}}

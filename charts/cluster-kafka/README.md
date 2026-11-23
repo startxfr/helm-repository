@@ -62,9 +62,9 @@ helm install cluster-kafka startx/cluster-kafka -f https://raw.githubusercontent
 
 Example values files shipped with the chart, to use with `helm install -f <file>` :
 
-- **demo** : STARTX cluster configuration, see values.yaml for the parameters (see [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kafka/values-demo.yaml))
-- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kafka/values-startx.yaml))
-- **startx_noinfra** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kafka/values-startx_noinfra.yaml))
+- **demo** : context `startx/default/infra`; against `values-startx.yaml`: differ on 47 keys, by top-level key: `operator` (19), `operatorConsole` (18), `project` (6), `context` (2), ... (see [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kafka/values-demo.yaml))
+- **startx** : context `startx/default/infra`; against `values.yaml`: differ on 21 keys, by top-level key: `operator` (6), `operatorConsole` (5), `context` (4), `project` (4), ... (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kafka/values-startx.yaml))
+- **startx_noinfra** : context `startx/default/infra`; against `values-startx.yaml`: differ on `operator.subscription.operator.config.infra` (true → false), `operatorConsole.subscription.operator.config.infra` (true → false) (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kafka/values-startx_noinfra.yaml))
 - `examples/argocd/` : 5 example manifest(s) (see the ArgoCD or usage sections)
 
 ```bash

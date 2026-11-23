@@ -62,6 +62,13 @@ The `DataScienceCluster` and `DSCInitialization` resources use the `v2` API (`da
 helm install cluster-ods startx/cluster-ods -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ods/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-ods startx/cluster-ods -f <file>`) :
+
+- [values-startx_noinfra-rhoai3.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ods/values-startx_noinfra-rhoai3.yaml) : against `values-startx.yaml`: differ on 56 keys, by top-level key: `operator` (24), `project` (16), `context` (6), `DSCInitialization` (5), `DataScienceCluster` (5)
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ods/values-startx_noinfra.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on `operator.subscription.operator.config.infra` (true → false)
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -73,8 +80,6 @@ oc apply -k .
 ```
 
 ### Applications
-
-
 
 ## History
 

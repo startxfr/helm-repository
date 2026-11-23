@@ -89,7 +89,7 @@ helm install cluster-cloudnativedb-instance startx/cluster-cloudnativedb --set p
 helm install cluster-cloudnativedb startx/cluster-cloudnativedb -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-cloudnativedb/values-startx.yaml
 ```
 
-## Values
+## Values dictionary
 
 ### Flavor (`flavor`)
 

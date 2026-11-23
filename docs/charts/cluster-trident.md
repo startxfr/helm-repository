@@ -16,6 +16,18 @@ more information on how to use these resources.
 - A reachable NetApp ONTAP cluster (management and data LIF, SVM, aggregate) and an SVM account
 - Access to the `certified-operators` catalog
 
+## What the chart renders
+
+| Resource                              | Sync wave |
+| ------------------------------------- | --------- |
+| Namespace (via `project` sub-chart)   | `-10`     |
+| Subscription (via `operator` sub-chart) | `-5`    |
+| Backend Secret                        | `1`       |
+| TridentOrchestrator                   | `15`      |
+| TridentBackendConfig                  | `30`      |
+| StorageClass                          | `40`      |
+| VolumeSnapshotClass                   | `40`      |
+
 ## Deploy this helm chart on openshift
 
 ### 1. Connect to your Openshift cluster
@@ -73,14 +85,14 @@ helm install cluster-trident startx/cluster-trident -f https://raw.githubusercon
 
 Example values files shipped with the chart, to use with `helm install -f <file>` :
 
-- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-trident/values-startx.yaml))
+- **startx** : context `startx/default/infra`; against `values.yaml`: differ on 21 keys, by top-level key: `project` (8), `operator` (7), `context` (2), `backends` (1), ... (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-trident/values-startx.yaml))
 - `examples/argocd/` : 5 example manifest(s) (see the ArgoCD or usage sections)
 
 ```bash
 helm install cluster-trident startx/cluster-trident -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-trident/values-startx.yaml
 ```
 
-## Values overview
+## Values dictionary
 
 See `values.yaml` for the full list. The most important keys are:
 
@@ -92,18 +104,6 @@ See `values.yaml` for the full list. The most important keys are:
 - `volumeSnapshotClasses.enabled` / `volumeSnapshotClasses.list[*]` : VolumeSnapshotClass (with the `k10.kasten.io/is-snapshot-class` annotation).
 - `project.*` : passed to the [project](https://helm-repository.readthedocs.io/en/latest/charts/project) sub-chart.
 - `operator.*` : passed to the [operator](https://helm-repository.readthedocs.io/en/latest/charts/operator) sub-chart.
-
-## Resources rendered
-
-| Resource                              | Sync wave |
-| ------------------------------------- | --------- |
-| Namespace (via `project` sub-chart)   | `-10`     |
-| Subscription (via `operator` sub-chart) | `-5`    |
-| Backend Secret                        | `1`       |
-| TridentOrchestrator                   | `15`      |
-| TridentBackendConfig                  | `30`      |
-| StorageClass                          | `40`      |
-| VolumeSnapshotClass                   | `40`      |
 
 ## Deploy with ArgoCD
 

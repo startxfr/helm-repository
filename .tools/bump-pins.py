@@ -27,11 +27,16 @@ Only the `version:` line of the item is rewritten; every other byte of Chart.yam
 order or quoting of the item. Dry run unless --apply is given. Chart.lock files are generated artifacts (ADR-0005):
 `helm dependency update` runs at release time.
 
-BUMP_PINS_SLEEP=<seconds> sets the pause between the 3 download attempts (default 2). --index <repository url>=<index file> replaces the download of that index (tests, offline review) ; repeatable.
+BUMP_PINS_SLEEP=<seconds> sets the pause between the 3 download attempts (default 2).
+BUMP_PINS_CACHE=<directory> + BUMP_PINS_RUN=<epoch seconds of the start of the run> (set by .tools/cli for the length of one multi-chart release, never by hand):
+each index is downloaded and parsed once per run, then read from that directory by the next calls. An entry of another run, or older than
+the run, is refused (exit 2): the cache never outlives the run that created it and never changes what is resolved. --index <repository url>=<index file> replaces the download of that index (tests, offline review) ; repeatable.
 Output: one line `<chart>: <dependency> <old> -> <new>` per pin to change (or changed), errors on stderr.
 Exit codes: 0 ok, 1 a pin is wrong or cannot be resolved, 2 an index is unreachable or unreadable."""
 import argparse
 import glob
+import hashlib
+import json
 import os
 import re
 import sys
@@ -90,6 +95,53 @@ if a.below and below is None:
     sys.exit('--below expects a version X.Y.Z')
 
 _cache = {}
+CACHE_DIR = os.environ.get('BUMP_PINS_CACHE')
+CACHE_RUN = os.environ.get('BUMP_PINS_RUN', '')
+if CACHE_DIR and (not os.path.isdir(CACHE_DIR) or not CACHE_RUN.isdigit()):
+    sys.stderr.write('bump-pins: BUMP_PINS_CACHE needs an existing directory and BUMP_PINS_RUN (epoch seconds of the start of the run): '
+                     'both are set by .tools/cli, nothing changed\n')
+    sys.exit(2)
+
+
+def cache_file(repo):
+    return os.path.join(CACHE_DIR, hashlib.sha256(repo.encode()).hexdigest()[:24] + '.json')
+
+
+def cache_load(repo):
+    """The parsed index saved by a previous call of this run, or None. An entry that is not of this run is refused (exit 2)."""
+    if not CACHE_DIR:
+        return None
+    path = cache_file(repo)
+    if not os.path.exists(path):
+        return None
+    run = int(CACHE_RUN)
+    try:
+        d = json.load(open(path))
+        fresh = (d['repo'] == repo and d['run'] == run and d['fetched'] >= run and os.path.getmtime(path) >= run)
+        out = {name: {vtuple(s): s for s in versions} for name, versions in d['entries'].items()} if fresh else None
+    except Exception as e:
+        sys.stderr.write(f'bump-pins: the cache entry {path} is unreadable ({e}): nothing changed\n')
+        sys.exit(2)
+    if out is None:
+        sys.stderr.write(f'bump-pins: the cache entry {path} is older than this run or belongs to another run: refused, nothing changed '
+                         '(the cache is created and removed by .tools/cli for one run)\n')
+        sys.exit(2)
+    return out
+
+
+def cache_save(repo, out):
+    """Best effort (the cache only saves time): a write failure leaves the next call to download again."""
+    if not CACHE_DIR:
+        return
+    path = cache_file(repo)
+    try:
+        d = {'repo': repo, 'run': int(CACHE_RUN), 'fetched': time.time(),
+             'entries': {name: sorted(found.values()) for name, found in out.items()}}
+        tmp = path + '.%d.tmp' % os.getpid()
+        json.dump(d, open(tmp, 'w'))
+        os.replace(tmp, path)
+    except Exception as e:
+        sys.stderr.write(f'bump-pins: WARNING the index cache cannot be written ({e}): the next call downloads again\n')
 
 
 def published(repo):
@@ -97,6 +149,11 @@ def published(repo):
     repo = repo.rstrip('/')
     if repo in _cache:
         return _cache[repo]
+    if repo not in local_index:
+        cached = cache_load(repo)
+        if cached is not None:
+            _cache[repo] = cached
+            return cached
     try:
         if repo in local_index:
             raw = open(local_index[repo], 'rb').read()
@@ -132,6 +189,8 @@ def published(repo):
                          'the pins are never taken from the local tree\n')
         sys.exit(2)
     _cache[repo] = out
+    if repo not in local_index:
+        cache_save(repo, out)
     return out
 
 
@@ -184,12 +243,15 @@ if a.levels:
 
 changes, errors, lagging, writes, warnings = [], [], [], {}, []
 for f in sorted(glob.glob('charts/*/Chart.yaml')):
+    if a.only and os.path.basename(os.path.dirname(f)) != a.only:
+        continue  # the directory of a chart is its name: do not parse the 90 other Chart.yaml for each call
     text = open(f).read()
     lines = text.split('\n')
-    chart = yaml.safe_load(text)['name']
+    doc = yaml.safe_load(text)
+    chart = doc['name']
     if a.only and chart != a.only:
         continue
-    own = vtuple(yaml.safe_load(text).get('version'))
+    own = vtuple(doc.get('version'))
     target = below or own
     touched = False
     items, flow = dependency_items(lines)

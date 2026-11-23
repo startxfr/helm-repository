@@ -163,7 +163,7 @@ helm install cluster-quay-app startx/cluster-quay --set project.enabled=false,op
 helm install cluster-quay startx/cluster-quay -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-quay/values-startx-quay.yaml
 ```
 
-## Values
+## Values dictionary
 
 Everything is in [values.yaml](values.yaml), with the same comments. Values marked *secret* are expected from the
 Argo CD Vault Plugin or from a values file kept out of Git.
@@ -245,6 +245,105 @@ Argo CD Vault Plugin or from a values file kept out of Git.
 switching `crunchy.cluster.enabled`), or by a separate release of cluster-crunchy fed with the same entries. The
 sub-chart contexts (`crunchy.context`, `cloudnativedb.context`, `percona.context`) label the database objects; the HA
 values files give them `component: database`.
+
+## Procedures
+
+### First super user
+
+With `quay.config.userInitialize: true` the API creates the first account once (`quay.config.superUsers` must contain it):
+
+```bash
+curl -s -X POST https://quay.apps.ocp.example.com/api/v1/user/initialize -H 'Content-Type: application/json' \
+  -d '{"username":"quayadmin","password":"<password>","email":"quayadmin@example.com","access_token":true}'
+```
+
+Keep the returned `access_token` (API). Then set `quay.config.userInitialize: false` and sync.
+
+### Enable the OIDC login (Keycloak)
+
+1. Keycloak: confidential client `quay`, standard flow, PKCE S256, redirect URIs `https://<hostname>/oauth2/sso/callback`,
+   `.../callback/attach`, `.../callback/cli`; *Direct access grants* only when `podman login` with the Keycloak
+   password is required (with `internalAuthentication`, Quay then checks passwords through the password grant;
+   otherwise users log in with an application token and the CI with robots); for team synchronization, a mapper
+   that emits the user's teams as a JSON array under the claim of `groupClaim`, with *Add to userinfo* enabled
+   (Quay reads the claims from the userinfo endpoint): a *Group Membership* mapper (claim `groups`, without full
+   path) or a *User Attribute* mapper on a multivalued attribute; client scopes `openid`, `email`, `profile`.
+2. Add the Keycloak usernames of the administrators to `quay.config.superUsers`, as Quay normalizes them (lower case,
+   characters outside `a-z0-9_` replaced by `_`, and a suffix such as `1` when the name is already taken by a
+   database account: the bootstrap super user must not share its name with a Keycloak account). With
+   `internalAuthentication` the database super user of the previous step no longer logs in with its password (its
+   API token keeps working, keep it as the break glass access).
+3. `oidc.enabled: true`, `oidc.server: https://sso.example.com/realms/<realm>/` (trailing slash, checked by the
+   chart), `oidc.clientSecret` (*secret*), `oidc.caCert` when the provider certificate comes from a private CA. Sync:
+   `quay-app` pods roll. A wrong issuer or client secret is caught by `config-tool validate` when the new pods start:
+   they crash loop (`oc logs deploy/<name>-quay-app`), the previous pods keep serving, the `QuayRegistry` turns
+   `Available=False` and Argo CD stays `Progressing`; fix the values and sync again.
+4. Any user of the realm allowed on the client gets a Quay account at first login (`FEATURE_USER_CREATION`): restrict
+   the client in Keycloak when needed. Team synchronization is set per team in the UI or the API
+   (`POST /api/v1/organization/<org>/team/<team>/syncing` with `{"group_name": "<group as sent in the claim>"}`);
+   members are synchronized at each login of a user.
+5. `internalAuthentication: false` keeps the database accounts and their passwords (external login button only), at
+   the price of team synchronization and of password self registration being open.
+
+### Verify the database certificates (`verify-full`)
+
+The first sync uses `require` because the CA of the clusters does not exist before they are created. Then:
+
+```bash
+# crunchy (one root CA per operator) and percona (one root CA per cluster) | cloudnativedb (one CA per cluster)
+oc get secret quay-db-cluster-cert -n quay-postgres -o jsonpath='{.data.ca\.crt}' | base64 -d   # cnpg: secret quay-db-ca
+```
+
+Put the PEM in `database.tls.caCert` (Vault + placeholder or values file), `database.tls.mode: verify-full`, sync.
+The chart adds `sslrootcert` to `DB_URI` and `DB_CONNECTION_ARGS` (`/.postgresql/root.crt`, filled by the Quay image
+from the `postgresql-client-certs` Secret), `extra_ca_cert_postgres-ca.crt` for Clair (`/var/run/certs/postgres-ca.crt`
+in its connection strings). The `DB_URI` change makes the operator scale `quay-app` to zero while the upgrade job
+runs (a few minutes): plan a maintenance window.
+
+CA lifetimes: Crunchy signs with one root CA per operator (10 years, renewed in the last third of its validity:
+refresh `caCert` then; the leaf certificates are renewed every year without any action); Percona signs with one root
+CA per cluster on the same engine (concatenate the PEMs of the two clusters in `caCert`). CloudNativePG generates one
+CA per cluster, valid `CERTIFICATE_DURATION` days (90 by default) and renewed 7 days before expiry: with
+`verify-full` either raise `CERTIFICATE_DURATION` in the operator configuration, or refresh `caCert` after each
+renewal; concatenate the PEMs of the two clusters in `caCert`. Otherwise keep `require` (traffic is encrypted, the
+server is not authenticated).
+
+### Backups and restore of the databases
+
+Backups, point in time restore, in place restore (Crunchy, Percona) and the alerts watching the backup chain are
+features of the database sub-charts: see the Procedures of
+[cluster-crunchy](https://helm-repository.readthedocs.io/en/latest/charts/cluster-crunchy),
+[cluster-cloudnativedb](https://helm-repository.readthedocs.io/en/latest/charts/cluster-cloudnativedb) and
+[cluster-percona](https://helm-repository.readthedocs.io/en/latest/charts/cluster-percona), applied to the
+`crunchy.cluster.list` / `cloudnativedb.cluster.list` / `percona.cluster.list` entries. Stop the registry first (`quay.stopped: true`,
+sync: quay-app, clair-app and quay-mirror at zero) and end with `quay.stopped: false`. After a restore into a cluster
+with a new name, point `database.quay.cluster` (and `clair`) to the new entry: `DB_URI` and the Clair connection
+strings follow.
+
+The registry bucket (layers) is not backed up by the chart: replicate or copy it (`aws s3 sync` without `--delete`)
+at the rhythm of the database backups; Red Hat asks for the database and the bucket to be backed up together.
+
+### Maintenance
+
+| Need | How |
+| --- | --- |
+| Rotate a database password | Crunchy and Percona: change the value (Vault, hard refresh, sync: the pguser Secret and `DB_URI` change together), then at once `oc patch secret quay-db-pguser-quay -n quay-postgres --type json -p '[{"op":"remove","path":"/data/verifier"}]'` so that the operator recomputes the SCRAM verifier; the upgrade job started by the `DB_URI` change fails on authentication until then and is recreated by the operator. CloudNativePG: the `<cluster>-owner` Secret is reloaded and the role updated by `managed.roles`. In both cases the new `DB_URI` scales `quay-app` to zero during the upgrade job |
+| Rotate `SECRET_KEY` | Allowed (sessions and tokens of the UI are invalidated). Never rotate `DATABASE_SECRET_KEY` |
+| Quay update | Approve the InstallPlan in a maintenance window: the operator scales `quay-app` to zero while the database migrations run. Then pin `operator.subscription.version` / `csv` to the CSV that took your backups |
+| Database operator update | Approve the InstallPlan: rolling restart, replicas first, then switchover |
+| Resize a data volume | Increase `storageInstanceSize` of the cluster entry (StorageClass with volume expansion) |
+| Stop the registry | `quay.stopped: true` |
+| Change `parameters` of a cluster entry | Applied by the operator (Patroni / CloudNativePG reload, restart when the parameter needs it) |
+
+### Monitoring
+
+The Quay operator adds its own `ServiceMonitor` and rules (`QuayPodFrequentlyRestarting`) in the registry namespace
+when `quay.components.monitoring` is managed. The database alerts (`CrunchyPostgres*`, `CloudNativePG*`) are rendered
+by the sub-charts in the database namespace; the Percona clusters report to a PMM server instead. The Quay operator labels the registry namespace
+`openshift.io/cluster-monitoring=true`, and so does the STARTX `project` chart on every namespace it creates,
+including the database one: the platform Prometheus scrapes the `PodMonitor` and evaluates the `PrometheusRule` of
+the databases, which Red Hat lists as unsupported for user objects. Give the databases a namespace created outside
+the `project` sub-chart (`crunchy.project.enabled: false`) when they must stay with the user workload monitoring stack.
 
 ## Deploy with ArgoCD
 
@@ -346,105 +445,6 @@ the first sync waits at wave -5 until the InstallPlans are approved, the custom 
 carry `Prune=false`. What you lose compared with two Applications: the health of the registry and the state of the
 operators are one status, and a sync that includes a changed Subscription waits for the InstallPlan approval before
 touching anything else.
-
-## Procedures
-
-### First super user
-
-With `quay.config.userInitialize: true` the API creates the first account once (`quay.config.superUsers` must contain it):
-
-```bash
-curl -s -X POST https://quay.apps.ocp.example.com/api/v1/user/initialize -H 'Content-Type: application/json' \
-  -d '{"username":"quayadmin","password":"<password>","email":"quayadmin@example.com","access_token":true}'
-```
-
-Keep the returned `access_token` (API). Then set `quay.config.userInitialize: false` and sync.
-
-### Enable the OIDC login (Keycloak)
-
-1. Keycloak: confidential client `quay`, standard flow, PKCE S256, redirect URIs `https://<hostname>/oauth2/sso/callback`,
-   `.../callback/attach`, `.../callback/cli`; *Direct access grants* only when `podman login` with the Keycloak
-   password is required (with `internalAuthentication`, Quay then checks passwords through the password grant;
-   otherwise users log in with an application token and the CI with robots); for team synchronization, a mapper
-   that emits the user's teams as a JSON array under the claim of `groupClaim`, with *Add to userinfo* enabled
-   (Quay reads the claims from the userinfo endpoint): a *Group Membership* mapper (claim `groups`, without full
-   path) or a *User Attribute* mapper on a multivalued attribute; client scopes `openid`, `email`, `profile`.
-2. Add the Keycloak usernames of the administrators to `quay.config.superUsers`, as Quay normalizes them (lower case,
-   characters outside `a-z0-9_` replaced by `_`, and a suffix such as `1` when the name is already taken by a
-   database account: the bootstrap super user must not share its name with a Keycloak account). With
-   `internalAuthentication` the database super user of the previous step no longer logs in with its password (its
-   API token keeps working, keep it as the break glass access).
-3. `oidc.enabled: true`, `oidc.server: https://sso.example.com/realms/<realm>/` (trailing slash, checked by the
-   chart), `oidc.clientSecret` (*secret*), `oidc.caCert` when the provider certificate comes from a private CA. Sync:
-   `quay-app` pods roll. A wrong issuer or client secret is caught by `config-tool validate` when the new pods start:
-   they crash loop (`oc logs deploy/<name>-quay-app`), the previous pods keep serving, the `QuayRegistry` turns
-   `Available=False` and Argo CD stays `Progressing`; fix the values and sync again.
-4. Any user of the realm allowed on the client gets a Quay account at first login (`FEATURE_USER_CREATION`): restrict
-   the client in Keycloak when needed. Team synchronization is set per team in the UI or the API
-   (`POST /api/v1/organization/<org>/team/<team>/syncing` with `{"group_name": "<group as sent in the claim>"}`);
-   members are synchronized at each login of a user.
-5. `internalAuthentication: false` keeps the database accounts and their passwords (external login button only), at
-   the price of team synchronization and of password self registration being open.
-
-### Verify the database certificates (`verify-full`)
-
-The first sync uses `require` because the CA of the clusters does not exist before they are created. Then:
-
-```bash
-# crunchy (one root CA per operator) and percona (one root CA per cluster) | cloudnativedb (one CA per cluster)
-oc get secret quay-db-cluster-cert -n quay-postgres -o jsonpath='{.data.ca\.crt}' | base64 -d   # cnpg: secret quay-db-ca
-```
-
-Put the PEM in `database.tls.caCert` (Vault + placeholder or values file), `database.tls.mode: verify-full`, sync.
-The chart adds `sslrootcert` to `DB_URI` and `DB_CONNECTION_ARGS` (`/.postgresql/root.crt`, filled by the Quay image
-from the `postgresql-client-certs` Secret), `extra_ca_cert_postgres-ca.crt` for Clair (`/var/run/certs/postgres-ca.crt`
-in its connection strings). The `DB_URI` change makes the operator scale `quay-app` to zero while the upgrade job
-runs (a few minutes): plan a maintenance window.
-
-CA lifetimes: Crunchy signs with one root CA per operator (10 years, renewed in the last third of its validity:
-refresh `caCert` then; the leaf certificates are renewed every year without any action); Percona signs with one root
-CA per cluster on the same engine (concatenate the PEMs of the two clusters in `caCert`). CloudNativePG generates one
-CA per cluster, valid `CERTIFICATE_DURATION` days (90 by default) and renewed 7 days before expiry: with
-`verify-full` either raise `CERTIFICATE_DURATION` in the operator configuration, or refresh `caCert` after each
-renewal; concatenate the PEMs of the two clusters in `caCert`. Otherwise keep `require` (traffic is encrypted, the
-server is not authenticated).
-
-### Backups and restore of the databases
-
-Backups, point in time restore, in place restore (Crunchy, Percona) and the alerts watching the backup chain are
-features of the database sub-charts: see the Procedures of
-[cluster-crunchy](https://helm-repository.readthedocs.io/en/latest/charts/cluster-crunchy),
-[cluster-cloudnativedb](https://helm-repository.readthedocs.io/en/latest/charts/cluster-cloudnativedb) and
-[cluster-percona](https://helm-repository.readthedocs.io/en/latest/charts/cluster-percona), applied to the
-`crunchy.cluster.list` / `cloudnativedb.cluster.list` / `percona.cluster.list` entries. Stop the registry first (`quay.stopped: true`,
-sync: quay-app, clair-app and quay-mirror at zero) and end with `quay.stopped: false`. After a restore into a cluster
-with a new name, point `database.quay.cluster` (and `clair`) to the new entry: `DB_URI` and the Clair connection
-strings follow.
-
-The registry bucket (layers) is not backed up by the chart: replicate or copy it (`aws s3 sync` without `--delete`)
-at the rhythm of the database backups; Red Hat asks for the database and the bucket to be backed up together.
-
-### Maintenance
-
-| Need | How |
-| --- | --- |
-| Rotate a database password | Crunchy and Percona: change the value (Vault, hard refresh, sync: the pguser Secret and `DB_URI` change together), then at once `oc patch secret quay-db-pguser-quay -n quay-postgres --type json -p '[{"op":"remove","path":"/data/verifier"}]'` so that the operator recomputes the SCRAM verifier; the upgrade job started by the `DB_URI` change fails on authentication until then and is recreated by the operator. CloudNativePG: the `<cluster>-owner` Secret is reloaded and the role updated by `managed.roles`. In both cases the new `DB_URI` scales `quay-app` to zero during the upgrade job |
-| Rotate `SECRET_KEY` | Allowed (sessions and tokens of the UI are invalidated). Never rotate `DATABASE_SECRET_KEY` |
-| Quay update | Approve the InstallPlan in a maintenance window: the operator scales `quay-app` to zero while the database migrations run. Then pin `operator.subscription.version` / `csv` to the CSV that took your backups |
-| Database operator update | Approve the InstallPlan: rolling restart, replicas first, then switchover |
-| Resize a data volume | Increase `storageInstanceSize` of the cluster entry (StorageClass with volume expansion) |
-| Stop the registry | `quay.stopped: true` |
-| Change `parameters` of a cluster entry | Applied by the operator (Patroni / CloudNativePG reload, restart when the parameter needs it) |
-
-### Monitoring
-
-The Quay operator adds its own `ServiceMonitor` and rules (`QuayPodFrequentlyRestarting`) in the registry namespace
-when `quay.components.monitoring` is managed. The database alerts (`CrunchyPostgres*`, `CloudNativePG*`) are rendered
-by the sub-charts in the database namespace; the Percona clusters report to a PMM server instead. The Quay operator labels the registry namespace
-`openshift.io/cluster-monitoring=true`, and so does the STARTX `project` chart on every namespace it creates,
-including the database one: the platform Prometheus scrapes the `PodMonitor` and evaluates the `PrometheusRule` of
-the databases, which Red Hat lists as unsupported for user objects. Give the databases a namespace created outside
-the `project` sub-chart (`crunchy.project.enabled: false`) when they must stay with the user workload monitoring stack.
 
 ## History
 

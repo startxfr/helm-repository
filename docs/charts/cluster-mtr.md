@@ -57,6 +57,12 @@ helm install cluster-mtr startx/cluster-mtr
 helm install cluster-mtr startx/cluster-mtr -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-mtr/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-mtr startx/cluster-mtr -f <file>`) :
+
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-mtr/values-startx_noinfra.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on `operator.subscription.operator.config.infra` (true → false)
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -68,8 +74,6 @@ oc apply -k .
 ```
 
 ### Applications
-
-
 
 ## History
 

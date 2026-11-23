@@ -56,6 +56,13 @@ helm install cluster-kargo startx/cluster-kargo
 helm install cluster-kargo startx/cluster-kargo -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kargo/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-kargo startx/cluster-kargo -f <file>`) :
+
+- [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kargo/values-demo.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 6 keys, by top-level key: `context` (2), `kargo` (2), `project` (2)
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kargo/values-startx_noinfra.yaml) : context `startx/default/infra`; same values as `values-startx.yaml`
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -67,8 +74,6 @@ oc apply -k .
 ```
 
 ### Applications
-
-
 
 ## History
 

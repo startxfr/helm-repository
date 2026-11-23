@@ -59,6 +59,13 @@ helm install cluster-storage-efs startx/cluster-storage-efs
 helm install cluster-storage-efs startx/cluster-storage-efs -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage-efs/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-storage-efs startx/cluster-storage-efs -f <file>`) :
+
+- [values-mg.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage-efs/values-mg.yaml) : against `values-startx.yaml`: differ on 4 keys, by top-level key: `operator` (2), `context` (1), `sharedVolumes` (1)
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage-efs/values-startx_noinfra.yaml) : context `startx/default/infra`; same values as `values-startx.yaml`
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -70,8 +77,6 @@ oc apply -k .
 ```
 
 ### Applications
-
-
 
 ## History
 
