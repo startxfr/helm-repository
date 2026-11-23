@@ -49,7 +49,7 @@ Every field keeps the one-line comment above it (`# Kube minimum version`, ...),
 
 - The first line is `# Default values for <name>.` **[CI-report]**
 - `context:` is the first top-level key, with the six keys `scope`, `cluster`, `environment`, `component`, `app`,
-  `version`; `context.app` defaults to the chart name. **[CI-report]**
+  `version`; `context.app` defaults to `default-<short-name>` (the rule of 59 charts; 12 older charts use the chart name and 22 another value, they stay as they are). **[review]**
 - Every top-level key has a comment line right above it. **[CI-report]**
 - Every feature is behind an `<feature>.enabled` switch, and every switch turned on alone must render.
   **[CI]** (`ci-check.sh toggles`)
