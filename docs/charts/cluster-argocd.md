@@ -145,3 +145,4 @@ and the revision from `rev` (or its alias `targetRevision`, default `master`). T
 | 21.3.412 | 2026-11-22 | full repository release: internal pins on the previous published version (ADR-0006) |
 | 21.3.416 | 2026-11-23 | stable update: chart fixes (project, cluster-mongo, cluster-oadp, cluster-pipeline, cluster-machine, example-catalog); cluster-dvo accepts the grafana keys next to its historical keys, which keep priority |
 | 21.3.418 | 2026-11-23 | commit a stable release of all charts |
+| 21.3.419 | 2026-11-23 | values-app-chaos.yaml regenerated from the chaos examples: names and sync policies kept, AppProject chaos-all narrowed (1 repository, 9 cluster kinds); README sentence on targetRevision restored |
