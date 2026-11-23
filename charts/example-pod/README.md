@@ -103,7 +103,7 @@ spec:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: example-pod
     # pin an exact version in production (ADR-0004)
-    targetRevision: 21.3.412
+    targetRevision: 21.3.416
     helm:
       valueFiles:
         - values.yaml
@@ -143,3 +143,4 @@ spec:
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |
 | 21.3.412 | 2026-11-22 | full repository release: internal pins on the previous published version (ADR-0006) |
+| 21.3.416 | 2026-11-23 | stable update: chart fixes (project, cluster-mongo, cluster-oadp, cluster-pipeline, cluster-machine, example-catalog); cluster-dvo accepts the grafana keys next to its historical keys, which keep priority |
