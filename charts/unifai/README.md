@@ -137,7 +137,7 @@ spec:
   source:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.416
+    targetRevision: 21.3.418
     helm:
       values: |
         stack:
@@ -168,7 +168,7 @@ spec:
   source:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.416
+    targetRevision: 21.3.418
     helm:
       # The definitions belong to the operator Application
       skipCrds: true
@@ -404,3 +404,4 @@ kubectl -n unifai logs deploy/unifai-operator-controller-manager
 | 21.3.414 | 2026-11-22 | README: setting stack.spec.replicas upgrades the multiagent-be release without restarting a running pod |
 | 21.3.415 | 2026-11-23 | UnifAI v0.1.78 (images pinned by digest), no CRD, RBAC or default change |
 | 21.3.416 | 2026-11-23 | stable update: chart fixes (project, cluster-mongo, cluster-oadp, cluster-pipeline, cluster-machine, example-catalog); cluster-dvo accepts the grafana keys next to its historical keys, which keep priority |
+| 21.3.418 | 2026-11-23 | commit a stable release of all charts |
