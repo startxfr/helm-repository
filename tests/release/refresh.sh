@@ -44,8 +44,9 @@ rc=$(run releaseAllCharts x y)
 [[ $(grep -c '^helm repo update' "$W/helm.log") -eq 1 ]] && grep -q 'run skip=true' "$W/helm.log" && [[ $rc -eq 0 ]] && ok "a run does ONE helm repo update first, then the charts with the flag" || bad "run: rc=$rc $(cat "$W/helm.log")"
 rc=$(FAIL_REPO_UPDATE=1 run releaseAllCharts x y)
 [[ $rc -eq 0 ]] && grep -q 'run skip=true' "$W/helm.log" && grep -q 'WARN.*helm repo update failed' "$W/out.log" && ok "helm repo update fails: WARN, the run continues" || bad "repo update failed: rc=$rc $(cat "$W/helm.log") $(cat "$W/out.log")"
-rc=$(run routerChartPackage demo)
-! env | grep -q '^PACKAGE_SKIP_REFRESH=' && ok "the flag does not leak outside the run" || bad "flag leaked"
+# the flag must be gone in the SAME shell once the run is over (a run exports nothing)
+leak=$( ( W=$W; source "$W/harness.sh"; unset PACKAGE_SKIP_REFRESH; releaseAllCharts x y >/dev/null 2>&1; echo "${PACKAGE_SKIP_REFRESH-unset}" ) )
+[[ "$leak" == "unset" ]] && ok "the flag does not leak after a run (checked in the shell that ran it)" || bad "flag leaked: PACKAGE_SKIP_REFRESH=$leak"
 
 echo "summary: $PASS passed, $FAIL failed"
 [[ $FAIL -eq 0 ]]

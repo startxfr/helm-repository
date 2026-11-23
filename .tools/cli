@@ -190,6 +190,13 @@ function routerListChanged {
     python3 -I "$PROJECT_LIBPATH/bump-pins.py" --lagging 2>&1 | sed 's/^/ /'
 }
 
+# Set the chart version in the ArgoCD examples of a README : only the YAML lines `targetRevision: <value>` (alone on their line, after
+# optional indentation or a list dash). The same words inside a sentence (`targetRevision: 21.3.x` followed by prose) are never touched.
+function readmeSetTargetRevision {
+    local readme="$1" version="$2"
+    sed -i -E "s/^([[:space:]-]*)targetRevision: .*/\\1targetRevision: ${version}/" "$readme"
+}
+
 # Release the selected charts (see chartListToRelease), one after the other. The pins of a chart on the charts of this
 # repository are resolved by routerChartRelease (.tools/bump-pins.py, ADR-0006): the latest version already published,
 # strictly below the version being released. A dependency that changed is therefore NOT released again with its
@@ -657,7 +664,7 @@ function routerChartRelease {
         echo -e "\e[35mRelease\e[0m bump \e[1m$chart_name\e[0m: $current_release → $next_release"
         # Only the chart own version : the pins were resolved above and must not follow it
         sed -i -E "s/^version:.*/version: $next_release/" "$chart_dir/Chart.yaml"
-        sed -i "s/targetRevision: .*/targetRevision: $next_release/" "$chart_dir/README.md"
+        readmeSetTargetRevision "$chart_dir/README.md" "$next_release"
         if [[ $DOC_ADD_HISTORY == "true" ]]; then
             if ! readmeHistoryUpdate "$chart_name" "$next_release|$(date +%Y-%m-%d)|$next_description"; then
                 [[ -n "$(tail -c1 "${chart_dir}/README.md")" ]] && echo "" >> "${chart_dir}/README.md"

@@ -101,7 +101,7 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 ### Chart version of the examples
 
 The Applications of the `examples/argocd/` folders of every chart pull the Helm chart from the startx repository and use the
-semver range `targetRevision: 21.3.418
+semver range `targetRevision: 21.3.x`, so that they follow the latest 21.3 release of the chart. Argo CD resolves the range at
 each refresh: pin an exact version in production (ADR-0004). Examples that read a chart from a git `path` and a branch are
 unchanged.
 
