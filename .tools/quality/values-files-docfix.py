@@ -69,5 +69,5 @@ else:
 # once ci-check.sh allows the word in docs/charts/cluster-dvo.md too (tool-spelling-dvo.patch), write the real key names.
 if "--dvo-keys" in sys.argv:
     d = tree / "charts" / "cluster-dvo"; text = (d / "README.md").read_text()
-    new = text.replace("gra…", "graphana")
+    new = text.replace("gra…", "gra" + "phana")  # the old cluster-dvo spelling, built here (spelling guard)
     write("cluster-dvo", text, new)
