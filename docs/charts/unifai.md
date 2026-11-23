@@ -137,7 +137,7 @@ spec:
   source:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.414
+    targetRevision: 21.3.415
     helm:
       values: |
         stack:
@@ -168,7 +168,7 @@ spec:
   source:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.414
+    targetRevision: 21.3.415
     helm:
       # The definitions belong to the operator Application
       skipCrds: true
@@ -402,3 +402,4 @@ kubectl -n unifai logs deploy/unifai-operator-controller-manager
 | 21.3.412 | 2026-11-22 | full repository release: internal pins on the previous published version (ADR-0006) |
 | 21.3.413 | 2026-11-22 | update: UnifAI v0.1.77 (operator image pinned by digest), optional stack.spec.replicas.multiagent, UnifaiStack CRD change |
 | 21.3.414 | 2026-11-22 | README: setting stack.spec.replicas upgrades the multiagent-be release without restarting a running pod |
+| 21.3.415 | 2026-11-23 | UnifAI v0.1.78 (images pinned by digest), no CRD, RBAC or default change |
