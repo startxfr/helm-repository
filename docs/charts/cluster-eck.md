@@ -176,80 +176,13 @@ helm install cluster-eck startx/cluster-eck -f https://raw.githubusercontent.com
 
 Example values files shipped with the chart, to use with `helm install -f <file>` :
 
-- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-eck/values-startx.yaml))
-- **startx_noinfra** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-eck/values-startx_noinfra.yaml))
+- **startx** : context `startx/default/infra`; against `values.yaml`: differ on 22 keys, by top-level key: `project` (6), `operator` (5), `context` (4), `tuned` (3), ... (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-eck/values-startx.yaml))
+- **startx_noinfra** : context `startx/default/infra`; against `values-startx.yaml`: differ on 5 keys, by top-level key: `tuned` (2), `elasticsearch` (1), `kibana` (1), `operator` (1) (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-eck/values-startx_noinfra.yaml))
 - `examples/argocd/` : 5 example manifest(s) (see the ArgoCD or usage sections)
 
 ```bash
 helm install cluster-eck startx/cluster-eck -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-eck/values-startx.yaml
 ```
-
-## Deploy with ArgoCD
-
-### Deploy via ArgoCD Application
-
-Deploy `cluster-eck` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject:
-
-```bash
-git clone https://gitlab.com/startx1/helm.git
-cd helm-repository/charts/cluster-eck/examples/argocd/
-oc apply -k .
-```
-
-| Application            | Wave   | Enabled flags                                                                 | Destination           |
-| ---------------------- | ------ | ----------------------------------------------------------------------------- | --------------------- |
-| `cluster-eck-project`  | `"1"`  | `project.enabled: true`, all others `false`                                   | `default-eck`         |
-| `cluster-eck-operator` | `"5"`  | `operator.enabled: true` (`operatorGroup.enabled: false`), all others `false` | `openshift-operators` |
-| `cluster-eck-app`      | `"10"` | `tuned`, `elasticsearch` and `kibana` `enabled: true`, all others `false`     | `default-eck`         |
-
-The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
-The `cluster-eck-app` Application also creates the `Tuned` resource in the `openshift-cluster-node-tuning-operator` namespace, the
-only one where the Node Tuning Operator reads it. The Subscription uses `installPlanApproval: Manual`: the `cluster-eck-app`
-Application stays out of sync until the InstallPlan of the operator is approved (`SkipDryRunOnMissingResource=true` lets the sync
-start before the Elastic APIs exist).
-
-## External secrets
-
-The secrets of the `secrets` block (secure settings of a snapshot repository, users of the file realm, certificates) can come from
-an external store (Vault, AWS Secrets Manager...) through the [External Secrets Operator](https://external-secrets.io) instead of
-the chart values. With `externalSecret.enabled: true`, the chart renders an `ExternalSecret` producing the Secret of the same name,
-namespace and type, so the Elastic resource referencing it is unchanged. Without `externalSecret`, the chart renders the Secret
-from `data`. Never commit a real credential in a values file.
-
-```yaml
-externalSecretDefaults:
-  secretStoreRef:
-    name: vault-backend
-    kind: ClusterSecretStore
-secrets:
-  enabled: true
-  list:
-    - name: es-snapshot-s3
-      externalSecret:
-        enabled: true
-        remoteRefs:
-          s3.client.default.access_key:
-            key: ocp/eck/snapshot-s3
-            property: access_key
-          s3.client.default.secret_key:
-            key: ocp/eck/snapshot-s3
-            property: secret_key
-elasticsearch:
-  enabled: true
-  list:
-    - name: default
-      spec:
-        version: 9.5.0
-        secureSettings:
-          - secretName: es-snapshot-s3
-        nodeSets:
-          - name: default
-            count: 3
-```
-
-An `externalSecret` block accepts `secretStoreRef` and `refreshInterval` (defaults: `externalSecretDefaults`),
-`remoteRefs` (map of secret key to ESO `remoteRef`) and the raw ESO fields `data`, `dataFrom` and `template`.
-Rendering fails when no store is set or when no key source is provided.
 
 ## Values dictionary
 
@@ -364,6 +297,73 @@ Rendering fails when no store is set or when no key source is provided.
 | operator.subscription.operator.source.name         | `certified-operators`                  | Catalog source of the operator                                     |
 | operator.subscription.operator.config.infra        | `false`                                | Run the operator on infra nodes                                    |
 | operator.operatorGroup.enabled                     | `false`                                | Disabled: `openshift-operators` already has a global OperatorGroup |
+
+## Deploy with ArgoCD
+
+### Deploy via ArgoCD Application
+
+Deploy `cluster-eck` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject:
+
+```bash
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-eck/examples/argocd/
+oc apply -k .
+```
+
+| Application            | Wave   | Enabled flags                                                                 | Destination           |
+| ---------------------- | ------ | ----------------------------------------------------------------------------- | --------------------- |
+| `cluster-eck-project`  | `"1"`  | `project.enabled: true`, all others `false`                                   | `default-eck`         |
+| `cluster-eck-operator` | `"5"`  | `operator.enabled: true` (`operatorGroup.enabled: false`), all others `false` | `openshift-operators` |
+| `cluster-eck-app`      | `"10"` | `tuned`, `elasticsearch` and `kibana` `enabled: true`, all others `false`     | `default-eck`         |
+
+The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
+The `cluster-eck-app` Application also creates the `Tuned` resource in the `openshift-cluster-node-tuning-operator` namespace, the
+only one where the Node Tuning Operator reads it. The Subscription uses `installPlanApproval: Manual`: the `cluster-eck-app`
+Application stays out of sync until the InstallPlan of the operator is approved (`SkipDryRunOnMissingResource=true` lets the sync
+start before the Elastic APIs exist).
+
+## External secrets
+
+The secrets of the `secrets` block (secure settings of a snapshot repository, users of the file realm, certificates) can come from
+an external store (Vault, AWS Secrets Manager...) through the [External Secrets Operator](https://external-secrets.io) instead of
+the chart values. With `externalSecret.enabled: true`, the chart renders an `ExternalSecret` producing the Secret of the same name,
+namespace and type, so the Elastic resource referencing it is unchanged. Without `externalSecret`, the chart renders the Secret
+from `data`. Never commit a real credential in a values file.
+
+```yaml
+externalSecretDefaults:
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+secrets:
+  enabled: true
+  list:
+    - name: es-snapshot-s3
+      externalSecret:
+        enabled: true
+        remoteRefs:
+          s3.client.default.access_key:
+            key: ocp/eck/snapshot-s3
+            property: access_key
+          s3.client.default.secret_key:
+            key: ocp/eck/snapshot-s3
+            property: secret_key
+elasticsearch:
+  enabled: true
+  list:
+    - name: default
+      spec:
+        version: 9.5.0
+        secureSettings:
+          - secretName: es-snapshot-s3
+        nodeSets:
+          - name: default
+            count: 3
+```
+
+An `externalSecret` block accepts `secretStoreRef` and `refreshInterval` (defaults: `externalSecretDefaults`),
+`remoteRefs` (map of secret key to ESO `remoteRef`) and the raw ESO fields `data`, `dataFrom` and `template`.
+Rendering fails when no store is set or when no key source is provided.
 
 ## History
 

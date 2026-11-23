@@ -8,12 +8,12 @@ metadata:
     {{- include "project.labels" . | nindent 4 }}
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-limits"
     {{- if .Values.limits.additionalLabels }}
-    {{- .Values.limits.additionalLabels | trim | nindent 4 }}
+    {{- include "project.extra" .Values.limits.additionalLabels | nindent 4 }}
     {{- end}}
   annotations:
     {{- include "project.annotations" . | nindent 4 }}
     {{- if .Values.limits.additionalAnnotations }}
-    {{- .Values.limits.additionalAnnotations | trim | nindent 4 }}
+    {{- include "project.extra" .Values.limits.additionalAnnotations | nindent 4 }}
     {{- end}}
 spec: 
   {{- .Values.limits.rules | nindent 2 }}

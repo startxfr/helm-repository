@@ -169,5 +169,39 @@ chart umbrella 21.3.9 "  - name: app
 python3 -I "$T/.tools/bump-pins.py" --levels > "$W/levels.log" 2>&1
 grep -q '^level 0 (2): fresh lib$' "$W/levels.log" && grep -q '^level 1 (3): app nextminor quoted$' "$W/levels.log" && grep -q '^level 2 (1): umbrella$' "$W/levels.log" && ok "--levels lists the charts by depth" || bad "levels: $(cat "$W/levels.log")"
 
+# per-run index cache (BUMP_PINS_CACHE / BUMP_PINS_RUN, created by .tools/cli): the index is read once per run, never reused across runs
+FB=file://$W/srv; FR=$FB/21; T2=$W/repo2; C=$W/cache
+mkdir -p "$W/srv/21" "$T2/.tools" "$T2/charts/app" "$C"
+cp "$ROOT/.tools/bump-pins.py" "$T2/.tools/"; cp "$T/.tools/config" "$T2/.tools/config"; cp "$W/index.yaml" "$W/srv/21/index.yaml"
+printf 'apiVersion: v2\nname: app\nversion: 21.3.7\ntype: application\ndependencies:\n  - name: lib\n    repository: %s\n    version: 21.3.3\n' "$FR" > "$T2/charts/app/Chart.yaml"
+cp "$T2/charts/app/Chart.yaml" "$W/app2.before"
+crun() { BASE=$FB python3 -I "$T2/.tools/bump-pins.py" "$@" 2>"$W/err.log" >"$W/out.log"; echo $?; }
+rc=$(crun --only app --below 21.3.7); cp "$W/out.log" "$W/nocache.out"
+RUN=$(date +%s)
+rc2=$(BUMP_PINS_CACHE=$C BUMP_PINS_RUN=$RUN crun --only app --below 21.3.7)
+[[ $rc -eq 0 && $rc2 -eq 0 ]] && cmp -s "$W/nocache.out" "$W/out.log" && [[ $(ls "$C" | grep -c '\.json$') -eq 1 ]] && ok "cache: same resolution with and without, one entry written for the repository" || bad "cache first call: rc=$rc/$rc2 $(cat "$W/err.log")"
+rm -f "$W/srv/21/index.yaml"
+rc=$(BUMP_PINS_CACHE=$C BUMP_PINS_RUN=$RUN crun --only app --below 21.3.7)
+cmp -s "$W/nocache.out" "$W/out.log" && [[ $rc -eq 0 ]] && ok "cache: the second call reads the cache (the index is not downloaded again)" || bad "cache hit: rc=$rc $(cat "$W/err.log")"
+rc=$(BUMP_PINS_SLEEP=0 crun --only app --below 21.3.7)
+[[ $rc -eq 2 ]] && ok "cache: without the cache variables the index is downloaded again (and its absence is fatal)" || bad "cache off: rc=$rc"
+rc=$(BUMP_PINS_CACHE=$C BUMP_PINS_RUN=$((RUN + 1)) crun --only app --below 21.3.7)
+[[ $rc -eq 2 ]] && grep -q 'older than this run or belongs to another run' "$W/err.log" && ok "cache: an entry of another run is refused (exit 2)" || bad "cache other run: rc=$rc $(cat "$W/err.log")"
+python3 - "$C" <<'PY'
+import glob, json, sys
+for p in glob.glob(sys.argv[1] + '/*.json'):
+    d = json.load(open(p)); d['fetched'] -= 10; json.dump(d, open(p, 'w'))
+PY
+rc=$(BUMP_PINS_CACHE=$C BUMP_PINS_RUN=$RUN crun --only app --below 21.3.7)
+[[ $rc -eq 2 ]] && grep -q 'older than this run' "$W/err.log" && ok "cache: an entry fetched before the start of the run is refused (exit 2)" || bad "cache stale: rc=$rc $(cat "$W/err.log")"
+for p in "$C"/*.json; do echo '{broken' > "$p"; done
+rc=$(BUMP_PINS_CACHE=$C BUMP_PINS_RUN=$RUN crun --only app --below 21.3.7)
+[[ $rc -eq 2 ]] && grep -q 'unreadable' "$W/err.log" && ! grep -q Traceback "$W/err.log" && ok "cache: a corrupt entry is refused (exit 2), no traceback" || bad "cache corrupt: rc=$rc $(cat "$W/err.log")"
+rc=$(BUMP_PINS_CACHE=$C crun --only app)
+[[ $rc -eq 2 ]] && grep -q 'BUMP_PINS_RUN' "$W/err.log" && ok "cache: a directory without the run start is refused" || bad "cache without run: rc=$rc $(cat "$W/err.log")"
+rc=$(BUMP_PINS_CACHE=$W/nowhere BUMP_PINS_RUN=$RUN crun --only app)
+[[ $rc -eq 2 ]] && ok "cache: a missing directory is refused" || bad "cache missing dir: rc=$rc"
+cmp -s "$W/app2.before" "$T2/charts/app/Chart.yaml" && ok "cache: nothing written to the chart by the refusals" || bad "cache refusals changed the chart"
+
 echo "summary: $PASS passed, $FAIL failed"
 [[ $FAIL -eq 0 ]]

@@ -94,7 +94,7 @@ helm install cluster-rhbk-instance startx/cluster-rhbk -f https://raw.githubuser
 helm install cluster-rhbk startx/cluster-rhbk -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rhbk/values-startx.yaml
 ```
 
-## Values
+## Values dictionary
 
 ### Chart level
 

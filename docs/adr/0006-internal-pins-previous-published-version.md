@@ -40,6 +40,10 @@ pass) the whole chain stopped, and a complete rebuild from a clean checkout was 
   Charts of different levels then carry different versions until the next full release (ADR-0001 already allows it).
 - The index is the one served by the dependency `repository` (`.../21/index.yaml`). When it cannot be downloaded the
   tool stops with exit code 2 and changes nothing: it never falls back to the versions of the local tree.
+  A multi-chart release (`releaseAllCharts`) downloads and parses each index once for the whole run: the cli creates a
+  temporary directory (`BUMP_PINS_CACHE`) and the start time of the run (`BUMP_PINS_RUN`), and removes the directory
+  at the end. The index only changes at `make publish`, never during a release. An entry of another run or fetched
+  before the start of the run is refused (exit 2); an inherited value is never trusted. The resolution is unchanged.
 - A dependency that has no published version below the target is an error: publish that chart first, in a release of
   its own (new charts take two releases).
 - One implementation, `.tools/bump-pins.py`, called by `routerChartRelease` for every chart with the version the

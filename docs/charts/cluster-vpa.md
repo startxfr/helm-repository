@@ -56,6 +56,13 @@ helm install cluster-vpa startx/cluster-vpa
 helm install cluster-vpa startx/cluster-vpa -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vpa/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-vpa startx/cluster-vpa -f <file>`) :
+
+- [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vpa/values-demo.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 8 keys, by top-level key: `operator` (3), `project` (3), `context` (1), `vpaController` (1)
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vpa/values-startx_noinfra.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on `operator.subscription.operator.config.infra` (true → false), `vpaController.spec`
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -67,8 +74,6 @@ oc apply -k .
 ```
 
 ### Applications
-
-
 
 ## History
 

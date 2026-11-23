@@ -10,7 +10,8 @@
 #                                                        fails by default; CI_SCHEMA_STRICT=false = report only)
 #   .github/scripts/ci-check.sh toggles [chart ...]      every <key>.enabled switched on alone must render
 #   .github/scripts/ci-check.sh conventions [chart ...]  README section order, titles, duplicates, Values files coverage
-#                                                        (report only; CI_CONVENTIONS_STRICT=true = fail on a finding)
+#                                                        (report only by default; CI_CONVENTIONS_STRICT=true = fail on a finding,
+#                                                        set in the `conventions` job of ci.yml and in .gitlab/ci-checks.yml)
 #   .github/scripts/ci-check.sh all                      static + charts + argocd
 #   .github/scripts/ci-check.sh chart-one <chart>        one chart (used by the parallel run)
 #
@@ -28,9 +29,12 @@ CI_SPELLING=${CI_SPELLING:-all}
 # Misspellings that CLAUDE.md asks to fix on sight (ERE, case insensitive)
 SPELLING='theses resources|environement|plateform|ressource|functionnal|organisational|recommandations|others values availables|projet'
 SPELLING_GRAPHANA='graphana'
+SPELLING_GRAPHANA_EXCLUDES=(':!charts/cluster-dvo' ':!docs/charts/cluster-dvo.md')
 # Not checked: CLAUDE.md, the conventions page and checker (they quote the misspellings) and the roadmap/ADR pages, the generated indexes, the French
 # web templates, the French console links of cluster-console (plateforme, ressources...) and the cluster-dvo values
 # keys named graphana (kept for compatibility, never rename them)
+# "graphana" alone is allowed in the cluster-dvo chart and in its documentation copy, in the full and in the added-lines mode; the other
+# misspellings and every other path stay refused
 SPELLING_EXCLUDES=(':!CLAUDE.md' ':!webtpl' ':!**/webtpl/**' ':!docs/repos' ':!docs/roadmap' ':!docs/adr' ':!*.tgz' ':!*.prov' ':!*.asc' ':!.github/scripts/ci-check.sh' ':!.github/scripts/readme-conventions.py' ':!docs/contribute-conventions.md' ':!charts/cluster-console/values-m*.yaml')
 
 log() { printf '%s\n' "$*"; }
@@ -66,12 +70,13 @@ check_pins() {
 # spelling_hits_all: every offending line of the tree ("graphana" is allowed in cluster-dvo only)
 spelling_hits_all() {
     git grep -nIiE -- "$SPELLING" -- . "${SPELLING_EXCLUDES[@]}" || true
-    git grep -nIiE -- "$SPELLING_GRAPHANA" -- . "${SPELLING_EXCLUDES[@]}" ':!charts/cluster-dvo' || true
+    git grep -nIiE -- "$SPELLING_GRAPHANA" -- . "${SPELLING_EXCLUDES[@]}" "${SPELLING_GRAPHANA_EXCLUDES[@]}" || true
 }
 
-# spelling_hits_added <base>: offending lines among the lines added since <base>
+# spelling_hits_added <base>: offending lines among the lines added since <base> ("graphana" is allowed in cluster-dvo only, as in the full mode)
 spelling_hits_added() {
-    git diff -U0 "$1" -- . "${SPELLING_EXCLUDES[@]}" | grep -E '^\+[^+]' | grep -iE -- "$SPELLING|$SPELLING_GRAPHANA" || true
+    git diff -U0 "$1" -- . "${SPELLING_EXCLUDES[@]}" | grep -E '^\+[^+]' | grep -iE -- "$SPELLING" || true
+    git diff -U0 "$1" -- . "${SPELLING_EXCLUDES[@]}" "${SPELLING_GRAPHANA_EXCLUDES[@]}" | grep -E '^\+[^+]' | grep -iE -- "$SPELLING_GRAPHANA" || true
 }
 
 check_spelling() {
@@ -198,8 +203,31 @@ check_argocd() {
             [[ $rev == '21.3.x' ]] || { log "FAIL $f: targetRevision '$rev' of a Helm chart source must be the range 21.3.x"; rc=1; }
         done < <(yq e 'select(.kind == "Application" and ((.spec.source.chart // "") != "")) | .spec.source.targetRevision' "$f" 2>/dev/null)
     done
+    # every values file named in a valueFiles list (examples and values-app files) must exist in the chart the Application reads
+    python3 - >"$tmp/valuefiles.log" <<'PY' || rc=1
+import glob, os, sys
+import yaml
+bad = 0
+def check(origin, source, helm):
+    global bad
+    chart = (source or {}).get('chart') or os.path.basename((source or {}).get('path') or '')
+    if isinstance(helm, str):
+        helm = yaml.safe_load(helm)
+    for vf in (helm or {}).get('valueFiles') or []:
+        if chart and os.path.isdir('charts/' + chart) and not os.path.isfile('charts/%s/%s' % (chart, vf)):
+            print('FAIL %s: valueFiles %s does not exist in charts/%s' % (origin, vf, chart)); bad = 1
+for f in sorted(glob.glob('charts/*/examples/argocd/*.yaml')):
+    for d in yaml.safe_load_all(open(f)):
+        if isinstance(d, dict) and d.get('kind') == 'Application':
+            check(f, d.get('spec', {}).get('source'), (d.get('spec', {}).get('source') or {}).get('helm'))
+for f in sorted(glob.glob('charts/cluster-argocd/values-app-*.yaml')):
+    for app in (yaml.safe_load(open(f)) or {}).get('application', {}).get('list') or []:
+        check(f + ' ' + str(app.get('name')), app.get('source'), app.get('helm'))
+sys.exit(bad)
+PY
+    [[ -s "$tmp/valuefiles.log" ]] && cat "$tmp/valuefiles.log"
     rm -rf "$tmp"
-    [[ $rc -eq 0 ]] && log "ok   argocd: $(ls charts/cluster-argocd/values-app-*.yaml | wc -l) values-app files render, $(ls charts/*/examples/argocd/*.yaml | wc -l) examples are valid"
+    [[ $rc -eq 0 ]] && log "ok   argocd: $(ls charts/cluster-argocd/values-app-*.yaml | wc -l) values-app files render, $(ls charts/*/examples/argocd/*.yaml | wc -l) examples are valid, every valueFiles exists"
     return $rc
 }
 

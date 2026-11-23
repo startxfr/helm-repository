@@ -66,26 +66,12 @@ helm install cluster-nmstate startx/cluster-nmstate -f https://raw.githubusercon
 
 Example values files shipped with the chart, to use with `helm install -f <file>` :
 
-- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nmstate/values-startx.yaml))
+- **startx** : context `startx/default/infra`; against `values.yaml`: differ on 18 keys, by top-level key: `operator` (6), `project` (6), `context` (4), `nmstate` (1), ... (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nmstate/values-startx.yaml))
 - `examples/argocd/` : 5 example manifest(s) (see the ArgoCD or usage sections)
 
 ```bash
 helm install cluster-nmstate startx/cluster-nmstate -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nmstate/values-startx.yaml
 ```
-
-## Deploy with ArgoCD
-
-### Deploy via ArgoCD Application
-
-Deploy `cluster-nmstate` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject:
-
-```bash
-git clone https://gitlab.com/startx1/helm.git
-cd helm-repository/charts/cluster-nmstate/examples/argocd/
-oc apply -k .
-```
-
-The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
 
 ## Values dictionary
 
@@ -161,6 +147,20 @@ nads:
         macspoofchk: true
         ipam: {}
 ```
+
+## Deploy with ArgoCD
+
+### Deploy via ArgoCD Application
+
+Deploy `cluster-nmstate` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject:
+
+```bash
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-nmstate/examples/argocd/
+oc apply -k .
+```
+
+The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
 
 ## History
 

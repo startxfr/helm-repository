@@ -55,6 +55,13 @@ helm install cluster-mtv startx/cluster-mtv
 helm install cluster-mtv startx/cluster-mtv -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-mtv/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-mtv startx/cluster-mtv -f <file>`) :
+
+- [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-mtv/values-demo.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 31 keys, by top-level key: `operator` (18), `mtv` (8), `project` (4), `context` (1)
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-mtv/values-startx_noinfra.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on `operator.subscription.operator.config.infra` (true → false)
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -66,8 +73,6 @@ oc apply -k .
 ```
 
 ### Applications
-
-
 
 ## History
 

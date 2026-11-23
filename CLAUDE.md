@@ -262,7 +262,7 @@ ignoreDifferences:
 | cluster-rhbk       | `k8s.keycloak.org`                    | `Keycloak`                |
 | cluster-quay       | `quay.redhat.com`                     | `QuayRegistry`            |
 | cluster-crunchy    | `postgres-operator.crunchydata.com`   | `PostgresCluster`         |
-| cluster-mongo      | `mongodbcommunity.mongodb.com`        | `MongoDBCommunity`        |
+| cluster-mongo      | `mongodb.com`                         | `MongoDB`                 |
 | cluster-mustgather | `managed.openshift.io`                | `MustGather`              |
 | cluster-3scale     | `apps.3scale.net`                     | `APIManager`              |
 | cluster-grafana    | `grafana.integreatly.org`             | `Grafana`                 |

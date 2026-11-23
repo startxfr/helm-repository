@@ -27,6 +27,16 @@ jobs:
           CI_BASE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || github.event.before }}
         run: .github/scripts/ci-check.sh static
 
+  conventions:
+    name: README conventions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: README section order, titles, Values files coverage (docs/contribute-conventions.md)
+        env:
+          CI_CONVENTIONS_STRICT: "true"
+        run: .github/scripts/ci-check.sh conventions
+
   charts:
     name: Charts ${{ matrix.group }}
     runs-on: ubuntu-latest

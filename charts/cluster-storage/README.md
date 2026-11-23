@@ -76,6 +76,18 @@ helm install cluster-storage startx/cluster-storage -f https://raw.githubusercon
 helm install cluster-storage startx/cluster-storage -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-startx-ocs.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-storage startx/cluster-storage -f <file>`) :
+
+- [values-cdf-poc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-cdf-poc.yaml) : against `values-startx.yaml`: differ on 4 keys, by top-level key: `context` (3), `storageClasses` (1)
+- [values-mg-odf.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-mg-odf.yaml) : against `values-startx.yaml`: differ on `context.app` (startx-storage → startx-infra), `context.component` (config → infra), `storageClasses`
+- [values-mg.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-mg.yaml) : against `values-startx.yaml`: differ on `context.app` (startx-storage → gov-storage), `storageClasses`
+- [values-prgmk.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-prgmk.yaml) : against `values-startx.yaml`: differ on `context.app` (startx-storage → pragmatik-storage), `context.scope` (startx → pragmatik), `storageClasses`
+- [values-startx-odf.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-startx-odf.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on `context.app` (startx-storage → startx-infra), `context.component` (config → infra), `storageClasses`
+- [values-startx_noinfra-odf.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-startx_noinfra-odf.yaml) : context `startx/default/infra`; same values as `values-startx-odf.yaml`
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-startx_noinfra.yaml) : context `startx/default/infra`; same values as `values-startx.yaml`
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -87,8 +99,6 @@ oc apply -k .
 ```
 
 ### Applications
-
-
 
 ## History
 

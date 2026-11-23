@@ -1,6 +1,14 @@
-{{- if .Values.grafana.enabled -}}
-{{- $name := .Values.grafana.name | default "deployment-validation" -}}
-{{- $namespace := .Values.grafanaProject.project.name | default "deployment-validation-monitoring" -}}
+{{- /* Two spellings of the same keys. values.yaml defines graphana* only (the aliases of Chart.yaml): a grafana* key found in .Values was
+       written by the user and wins, as it always did. The graphana* name and namespace are used only when graphana.enabled is the switch that is on (grafana.enabled keeps the old rules). */ -}}
+{{- $graphana := .Values.graphana | default dict -}}
+{{- $grafana := .Values.grafana | default dict -}}
+{{- if or $graphana.enabled $grafana.enabled -}}
+{{- $name := $grafana.name -}}
+{{- if and (not $name) $graphana.enabled (not $grafana.enabled) -}}{{- $name = $graphana.name -}}{{- end -}}
+{{- $name = $name | default "deployment-validation" -}}
+{{- $namespace := dig "project" "name" "" (.Values.grafanaProject | default dict) -}}
+{{- if and (not $namespace) $graphana.enabled (not $grafana.enabled) -}}{{- $namespace = dig "project" "name" "" (.Values.graphanaProject | default dict) -}}{{- end -}}
+{{- $namespace = $namespace | default "deployment-validation-monitoring" -}}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor

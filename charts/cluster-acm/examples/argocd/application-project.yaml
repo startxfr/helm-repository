@@ -14,12 +14,14 @@ spec:
     chart: cluster-acm
     helm:
       valueFiles:
-        - values-startx_noinfra.yaml
+        - values-startx_noinfra-acm.yaml
       values: |
         acm:
           enabled: false
         project:
           enabled: true
+          project:
+            enabled: true
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     # pin an exact version in production (ADR-0004)
     targetRevision: 21.3.x

@@ -75,6 +75,12 @@ helm install cluster-qdrant startx/cluster-qdrant
 helm install cluster-qdrant startx/cluster-qdrant -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-qdrant/values-startx.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-qdrant startx/cluster-qdrant -f <file>`) :
+
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-qdrant/values-startx_noinfra.yaml) : context `startx/default/infra`; same values as `values-startx.yaml`
+
 ## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application

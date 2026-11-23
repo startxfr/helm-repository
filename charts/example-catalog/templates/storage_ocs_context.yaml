@@ -77,7 +77,7 @@ kind: BackingStore
 apiVersion: noobaa.io/v1alpha1
 metadata:
   name: "spreaded-k8s-store"
-  namespace: {{ $namespace_odf quote }}
+  namespace: {{ $namespace_odf | quote }}
   labels:
     {{- include "example-catalog.labels" $ | nindent 4 }}
     app: "noobaa-demo"

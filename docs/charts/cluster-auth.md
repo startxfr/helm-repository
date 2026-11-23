@@ -75,6 +75,19 @@ helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.c
 helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-mg.yaml
 ```
 
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-auth startx/cluster-auth -f <file>`) :
+
+- [values-cdf-poc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-cdf-poc.yaml) : against `values-startx.yaml`: differ on 14 keys, by top-level key: `auth` (11), `context` (3)
+- [values-chd-d1.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-chd-d1.yaml) : against `values-startx.yaml`: differ on 14 keys, by top-level key: `auth` (11), `context` (3)
+- [values-devoteam.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-devoteam.yaml) : against `values-startx.yaml`: differ on 9 keys, by top-level key: `auth` (8), `context` (1)
+- [values-lahsc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-lahsc.yaml) : against `values-startx.yaml`: differ on 12 keys, by top-level key: `auth` (11), `context` (1)
+- [values-odhf-d1.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-odhf-d1.yaml) : against `values-startx.yaml`: differ on 14 keys, by top-level key: `auth` (11), `context` (3)
+- [values-prgmk.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-prgmk.yaml) : against `values-startx.yaml`: differ on 13 keys, by top-level key: `auth` (11), `context` (2)
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-startx_noinfra.yaml) : context `startx/default/infra`; same values as `values-startx.yaml`
+- [values-ubisoft.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-ubisoft.yaml) : against `values-startx.yaml`: differ on 13 keys, by top-level key: `auth` (11), `context` (2)
+
 ## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application

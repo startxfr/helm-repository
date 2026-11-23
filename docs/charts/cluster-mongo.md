@@ -36,16 +36,6 @@ helm show chart startx/cluster-mongo
 helm install cluster-mongo startx/cluster-mongo
 ```
 
-## Deploy with ArgoCD
-
-### Applications
-
-```bash
-git clone https://gitlab.com/startx1/helm.git
-cd helm-repository/charts/cluster-mongo/examples/argocd/
-oc apply -k .
-```
-
 ## Default values
 
 Complete deployment of a project with the following characteristics :
@@ -64,6 +54,23 @@ helm install cluster-mongo startx/cluster-mongo
 
 ```bash
 helm install cluster-mongo startx/cluster-mongo -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-mongo/values-startx.yaml
+```
+
+### Other values files
+
+Values files without a detailed section above (each one is a complete set of values for `helm install cluster-mongo startx/cluster-mongo -f <file>`) :
+
+- [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-mongo/values-demo.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 14 keys, by top-level key: `project` (13), `operator` (1)
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-mongo/values-startx_noinfra.yaml) : context `startx/default/infra`; same values as `values-startx.yaml`
+
+## Deploy with ArgoCD
+
+### Applications
+
+```bash
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-mongo/examples/argocd/
+oc apply -k .
 ```
 
 ## History
