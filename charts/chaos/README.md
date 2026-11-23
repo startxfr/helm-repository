@@ -258,9 +258,38 @@ oc apply -k examples/argocd/
 - **Finalizer** : every Application carries `resources-finalizer.argocd.argoproj.io`; delete the Applications before the AppProject.
 - **Order** : the examples set no sync wave. `chaos-kraken-instance` and `chaos-pipeline-instance` point at the cerberus service of `chaos-cerberus`, so sync `chaos-cerberus-instance` first.
 - **chaos-mesh** : its Application uses `ServerSideApply=true` and `ignoreDifferences` on the generated certificates and webhook `caBundle` fields (see the `chaos-mesh` README).
-- **Version** : `targetRevision: 21.3.418
-- **cluster-argocd** : `values-app-chaos.yaml` of the `cluster-argocd` chart deploys the same six tools from the git repository (AppProject `chaos-all`, sync wave 50, and 54 for `chaos-pipeline`).
-- **AppProject** : 7 destination namespaces (`chaos-cerberus`, `chaos-kraken`, `chaos-pipeline`, `chaos-litmus`, `chaos-mesh`, `chaos-monkey`, `default`) and the cluster resources the tools need (namespaces, SCC, cluster roles, CRDs, chaos-mesh webhooks).
+- **Version** : `targetRevision: 21.3.x` follows the minor release; pin an exact version in production (ADR-0004).
+- **cluster-argocd** : `values-app-chaos.yaml` of the `cluster-argocd` chart deploys the same six tools from the git repository (`stable`) with the AppProject `chaos-all` (sync wave 0) and the Applications `chaos-all-<tool>-instance` (sync wave 50, and 54 for `chaos-pipeline`). These names differ from the `chaos` and `chaos-<tool>-instance` of `examples/argocd/` and are kept on purpose, see [Names of values-app-chaos.yaml](#names-of-values-app-chaosyaml).
+- **AppProject** : 7 destination namespaces (`chaos-cerberus`, `chaos-kraken`, `chaos-pipeline`, `chaos-litmus`, `chaos-mesh`, `chaos-monkey`, `default`) and the cluster resources the tools need (namespaces, projects, SCC, cluster roles, CRDs, chaos-mesh webhooks). The AppProject generated in `values-app-chaos.yaml` has an 8th destination, `openshift-gitops`: the generator adds it to every `values-app-*.yaml` file.
+
+### Names of values-app-chaos.yaml
+
+`values-app-chaos.yaml` keeps the AppProject `chaos-all` and the Applications `chaos-all-cerberus-instance`, `chaos-all-kraken-instance`, `chaos-all-litmus-instance`, `chaos-all-mesh-instance`, `chaos-all-monkey-instance` and `chaos-all-pipeline-instance`, the names published by earlier releases. `values-aoa-infra-all.yaml` and `values-aoa-infra-mgmt.yaml` deploy this file on `stable` with automated `prune` and `selfHeal`, and every Application carries the resources finalizer: renaming one deletes the Application and everything it deployed. `.tools/generate-values-app.py` keeps these names (`KEPT_NAMES`), so regenerating the file never renames them.
+
+`chaos-all-cerberus-instance`, `chaos-all-litmus-instance` and `chaos-all-monkey-instance` are **manual** in `values-app-chaos.yaml` (no automated sync, as in earlier releases), while the same three Applications of `examples/argocd/` sync automatically. The generator keeps this difference (`KEPT_SYNC`), so a clean cluster tracking `stable` does not start pruning and self-healing these tools by itself; `chaos-all-mesh-instance` and `chaos-all-pipeline-instance` sync automatically in both, `chaos-all-kraken-instance` is manual in both.
+
+**Upgrade from an earlier `values-app-chaos.yaml`: nothing to migrate.** The names are the same, the Applications are updated in place by the next sync. What changes:
+
+- AppProject `chaos-all`: `sourceRepos` goes from 4 repositories to the git repository only (every Application reads a chart path of that repository, the upstream charts are dependencies of those charts), and `clusterResourceWhitelist` goes from `*/*` to the 9 kinds the six charts render (Namespace, Project, SecurityContextConstraints, ClusterRole, ClusterRoleBinding, CustomResourceDefinition, the two admission webhook configurations, `chaos-mesh.org/*`), checked with `helm template --include-crds` on the six charts. A cluster resource of another kind in a chart you added needs an entry in the whitelist.
+- Applications: `helm.valueFiles` is `values.yaml` and `repoURL`/`targetRevision` are written `repo`/`rev` (same values). The `chaos-monkey` example sets `config.timeZone` (the key the chart reads) instead of `timezone`, which was ignored.
+
+Moving to the names of `examples/argocd/` (`chaos`, `chaos-<tool>-instance`) is never needed. If you do it, do not let a new Application replace an old one by name alone: the old Application would delete its resources. For each tool, in this order:
+
+```bash
+# 1. apply the AppProject `chaos` and the new Application, with automated sync disabled (kraken already is).
+#    For chaos-mesh and chaos-litmus the new Application MUST set spec.source.helm.releaseName: chaos-all-<tool>-instance
+#    (the old Application name): Argo CD uses the Application name as the Helm release name, and these two charts put the
+#    release name in the names of their objects. Without it the new Application creates new objects next to the old ones
+#    instead of adopting them. The four other charts do not use the release name in object names.
+# 2. detach the old Application from its resources, then delete it: the resources stay in place
+oc patch application.argoproj.io chaos-all-<tool>-instance -n openshift-gitops \
+  --type=json -p '[{"op":"remove","path":"/metadata/finalizers"}]'
+oc delete application.argoproj.io chaos-all-<tool>-instance -n openshift-gitops
+# 3. sync the new `chaos-<tool>-instance`: it adopts the resources (same chart, same namespace, same release name), then re-enable automated sync
+# 4. when the six Applications are moved, delete the AppProject chaos-all
+```
+
+Do not run the commands of step 2 on a cluster where `values-aoa-infra-*` still deploys `values-app-chaos.yaml`: the app of apps recreates the old Applications on its next sync.
 
 ## History
 
@@ -294,3 +323,4 @@ oc apply -k examples/argocd/
 | 21.3.412 | 2026-11-22 | full repository release: internal pins on the previous published version (ADR-0006) |
 | 21.3.416 | 2026-11-23 | stable update: chart fixes (project, cluster-mongo, cluster-oadp, cluster-pipeline, cluster-machine, example-catalog); cluster-dvo accepts the grafana keys next to its historical keys, which keep priority |
 | 21.3.418 | 2026-11-23 | commit a stable release of all charts |
+| 21.3.419 | 2026-11-23 | values-app-chaos.yaml documented: names kept, the 3 manual Applications stay manual; README sentence on targetRevision restored |

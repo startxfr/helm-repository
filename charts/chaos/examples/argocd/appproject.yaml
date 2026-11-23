@@ -3,6 +3,8 @@ kind: AppProject
 metadata:
   name: chaos
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   description: Full chaos testing suite — cerberus, kraken, pipeline, litmus, chaos-mesh, kube-monkey
   sourceRepos:
@@ -29,7 +31,7 @@ spec:
     - group: ''
       kind: Namespace
     - group: project.openshift.io
-      kind: ProjectRequest
+      kind: Project
     - group: security.openshift.io
       kind: SecurityContextConstraints
     - group: rbac.authorization.k8s.io
