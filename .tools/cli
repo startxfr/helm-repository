@@ -190,6 +190,13 @@ function routerListChanged {
     python3 -I "$PROJECT_LIBPATH/bump-pins.py" --lagging 2>&1 | sed 's/^/ /'
 }
 
+# Set the chart version in the ArgoCD examples of a README : only the YAML lines `targetRevision: <value>` (alone on their line, after
+# optional indentation or a list dash). The same words inside a sentence (`targetRevision: 21.3.x` followed by prose) are never touched.
+function readmeSetTargetRevision {
+    local readme="$1" version="$2"
+    sed -i -E "s/^([[:space:]-]*)targetRevision: .*/\\1targetRevision: ${version}/" "$readme"
+}
+
 # Release the selected charts (see chartListToRelease), one after the other. The pins of a chart on the charts of this
 # repository are resolved by routerChartRelease (.tools/bump-pins.py, ADR-0006): the latest version already published,
 # strictly below the version being released. A dependency that changed is therefore NOT released again with its
@@ -205,7 +212,16 @@ function releaseAllCharts {
     else
         unset BUMP_PINS_CACHE BUMP_PINS_RUN
     fi
-    releaseAllChartsRun "$@"
+    # One `helm repo update` for the whole run, then `helm dependency update --skip-refresh` per chart (routerChartPackage). A pin is
+    # always a version published BEFORE the run (ADR-0006), so the indexes cached at the start are enough for the repositories that
+    # `helm repo update` manages. The /21 repository of this bucket is "unmanaged" (not added with `helm repo add`): `helm repo update`
+    # does not refresh it, only the retry with a refresh of routerChartPackage does. A failing repository is not fatal here: the
+    # chart that needs it falls back to the normal dependency update, which fails alone if the repository is really unreachable.
+    # A resumed run goes through this function again and refreshes again.
+    if ! helm repo update >/dev/null; then
+        echo -e "\e[31mRelease\e[0m \e[33mWARN\e[0m helm repo update failed for at least one repository : continuing, each chart retries with a refresh if its dependencies cannot be resolved" >&2
+    fi
+    PACKAGE_SKIP_REFRESH=true releaseAllChartsRun "$@"
     pins_status=$?
     [[ -n "$pins_cache" ]] && rm -rf -- "$pins_cache"
     unset BUMP_PINS_CACHE BUMP_PINS_RUN
@@ -550,7 +566,14 @@ function routerChartPackage {
         git commit -m "[chart/$chart_name] package version $current_release" "$chart_name" &>/dev/null
         echo -e "\e[34mPackage\e[0m download dependencies for \e[1m$chart_name\e[0m"
         # A package built without its dependencies must never reach the repository
-        if ! helm dependency update "$chart_dir"; then
+        # Inside a multi-chart release the repositories were refreshed once (releaseAllCharts): do not refresh them for each chart.
+        # A chart whose update fails that way is tried once more with the normal refresh (a repository missing from the cache).
+        local dep_ok=1
+        if [[ "${PACKAGE_SKIP_REFRESH:-}" == "true" ]]; then
+            helm dependency update --skip-refresh "$chart_dir" && dep_ok=0
+            [[ $dep_ok -ne 0 ]] && echo -e "\e[34mPackage\e[0m \e[33mWARN\e[0m dependency update without refresh failed for \e[1m$chart_name\e[0m : retrying with a refresh"
+        fi
+        if [[ $dep_ok -ne 0 ]] && ! helm dependency update "$chart_dir"; then
             echo -e "\e[34mPackage\e[0m \e[31mERROR\e[0m dependencies of \e[1m$chart_name\e[0m cannot be resolved, nothing packaged" >&2
             cd - &>/dev/null || exit 1
             return 1
@@ -641,7 +664,7 @@ function routerChartRelease {
         echo -e "\e[35mRelease\e[0m bump \e[1m$chart_name\e[0m: $current_release → $next_release"
         # Only the chart own version : the pins were resolved above and must not follow it
         sed -i -E "s/^version:.*/version: $next_release/" "$chart_dir/Chart.yaml"
-        sed -i "s/targetRevision: .*/targetRevision: $next_release/" "$chart_dir/README.md"
+        readmeSetTargetRevision "$chart_dir/README.md" "$next_release"
         if [[ $DOC_ADD_HISTORY == "true" ]]; then
             if ! readmeHistoryUpdate "$chart_name" "$next_release|$(date +%Y-%m-%d)|$next_description"; then
                 [[ -n "$(tail -c1 "${chart_dir}/README.md")" ]] && echo "" >> "${chart_dir}/README.md"

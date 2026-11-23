@@ -29,7 +29,8 @@ CI_SPELLING=${CI_SPELLING:-all}
 # Misspellings that CLAUDE.md asks to fix on sight (ERE, case insensitive)
 SPELLING='theses resources|environement|plateform|ressource|functionnal|organisational|recommandations|others values availables|projet'
 SPELLING_GRAPHANA='graphana'
-SPELLING_GRAPHANA_EXCLUDES=(':!charts/cluster-dvo' ':!docs/charts/cluster-dvo.md')
+# the two scripts that test the old cluster-dvo keys (the matrix of inputs names them on purpose) are allowed too, exactly these two files
+SPELLING_GRAPHANA_EXCLUDES=(':!charts/cluster-dvo' ':!docs/charts/cluster-dvo.md' ':!.tools/quality/dvo-matrix.py' ':!.tools/quality/dvo-matrix2.py')
 # Not checked: CLAUDE.md, the conventions page and checker (they quote the misspellings) and the roadmap/ADR pages, the generated indexes, the French
 # web templates, the French console links of cluster-console (plateforme, ressources...) and the cluster-dvo values
 # keys named graphana (kept for compatibility, never rename them)
