@@ -8,7 +8,7 @@ type: application
 # Version of this helm chart
 version: 21.3.414
 # Version of the UnifAI release deployed by this chart (operator and application images)
-appVersion: "0.1.77"
+appVersion: "0.1.78"
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/unifai.svg
 # Kube minimum version
@@ -62,13 +62,13 @@ annotations:
   # Artifacthub changes logs (could be added, changed, deprecated, removed, fixed and security)
   artifacthub.io/changes: |
     - kind: changed
-      description: "Update UnifAI from v0.1.76 to v0.1.77 (operator and application images, pinned by digest ; new optional stack.spec.replicas.multiagent, the UnifaiStack CRD changes)"
+      description: "UnifAI v0.1.77 -> v0.1.78 (images pinned by digest), no CRD, RBAC or default change"
   # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"
   # Images deployed by this chart
   artifacthub.io/images: |
     - name: unifai-operator
-      image: quay.io/zuno/unifai-operator@sha256:5b323ea0a6274f7b81b991e2a6dc2d7e280cc57d0860ed48bd55e78855648148
+      image: quay.io/zuno/unifai-operator@sha256:f85a83bb59bf6838e11fbb3cdd6b74e7c103130601b12445f58efb06795eb396
   # Custom resource definitions installed by this chart
   artifacthub.io/crds: |
     - kind: UnifaiStack

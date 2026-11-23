@@ -10,7 +10,7 @@ This chart installs two things :
   web interface, backend, multi-agent engine, RAG services, identity service, and their datastores (MongoDB,
   Qdrant, RabbitMQ, Redis, Temporal).
 
-It deploys UnifAI release **v0.1.77** ; every UnifAI image is pinned by digest.
+It deploys UnifAI release **v0.1.78** ; every UnifAI image is pinned by digest.
 
 ## Requirements
 
@@ -238,7 +238,7 @@ The settings most installs need :
 | Key                               | Default            | Description                                                                    |
 | --------------------------------- | ------------------ | ------------------------------------------------------------------------------ |
 | `profile`                         | `dev`              | `dev` (small requests, no autoscaling) or `prod`                               |
-| `version`, `images`               | v0.1.77, digests   | UnifAI images ; change them together when upgrading                            |
+| `version`, `images`               | v0.1.78, digests   | UnifAI images ; change them together when upgrading                            |
 | `identity.adminUsers`             | `[admin]`          | Keycloak users granted the administrator role                                  |
 | `identity.keycloak`               | `{}`               | Keycloak deployed by the operator (OpenShift only)                             |
 | `identity.external`               | not set            | your own Keycloak ; replaces `identity.keycloak`                               |
