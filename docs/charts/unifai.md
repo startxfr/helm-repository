@@ -403,4 +403,4 @@ kubectl -n unifai logs deploy/unifai-operator-controller-manager
 | 21.3.413 | 2026-11-22 | update: UnifAI v0.1.77 (operator image pinned by digest), optional stack.spec.replicas.multiagent, UnifaiStack CRD change |
 | 21.3.414 | 2026-11-22 | README: setting stack.spec.replicas upgrades the multiagent-be release without restarting a running pod |
 | 21.3.415 | 2026-11-23 | UnifAI v0.1.78 (images pinned by digest), no CRD, RBAC or default change |
-| 21.3.416 | 2026-11-23 | stable update: chart fixes (project, cluster-mongo, cluster-oadp, cluster-pipeline, cluster-machine, example-catalog); cluster-dvo accepts the grafana keys next to graphana, which keeps priority |
+| 21.3.416 | 2026-11-23 | stable update: chart fixes (project, cluster-mongo, cluster-oadp, cluster-pipeline, cluster-machine, example-catalog); cluster-dvo accepts the grafana keys next to its historical keys, which keep priority |
